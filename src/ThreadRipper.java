@@ -1,13 +1,12 @@
 import com.jaunt.Element;
 import com.jaunt.Elements;
 import com.jaunt.JauntException;
-import com.jaunt.Node;
 import com.jaunt.UserAgent;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Created by Shazambom on 7/22/2015.
@@ -29,44 +28,51 @@ public class ThreadRipper {
                 links.set(i, parseLink(links.get(i)));
                 names.add(parseFileName(links.get(i)));
             }
+            String[] foulder = new File(filePath).list();
+            HashMap<Integer, String> files = new HashMap<Integer, String>();
+            for (String element: foulder) {
+                files.put(element.hashCode(), element);
+            }
 
             System.out.print("[");
-            int failures = downloadImages(links, names, userAgent, filePath);
+            int success = downloadImages(links, names, userAgent, filePath, files);
             System.out.println("]");
-            System.out.println(links.size() - failures + " images successfully downloaded");
+            System.out.println(success + " unique images successfully downloaded");
 
 
         } catch(JauntException e) {
             e.printStackTrace();
         }
     }
-    private static int downloadImages(List<String> links, List<String> names, UserAgent userAgent, String filePath) {
-        int failures = 0;
+    private static int downloadImages(List<String> links, List<String> names, UserAgent userAgent, String filePath, HashMap<Integer, String> files) {
+        int success = 0;
         double percentageComplete;
         if (links.size() < 10) {
-            percentageComplete = 1;
+            percentageComplete = links.size();
         } else {
             percentageComplete = links.size()/10;
         }
         for (int i = 0; i < links.size(); i++) {
-            try {
-                userAgent.download(links.get(i), new File(filePath + names.get(i)));
-            } catch (JauntException e) {
-                System.out.println("\nFile: "+ (i + 1) + " at the url: " + links.get(i) + " failed to download");
-                failures += downloadImages(links.subList(i + 1, links.size()), names.subList(i + 1, names.size()), userAgent, filePath);
-                failures++;
-                i = links.size();
-            }
-            if (i != 0 && i % percentageComplete == 0) {
-                System.out.print("∎");
-            }
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-                Thread.currentThread().interrupt();
+            if (!files.containsValue(names.get(i))) {
+                try {
+                    userAgent.download(links.get(i), new File(filePath + names.get(i)));
+                    success++;
+                } catch (JauntException e) {
+                    System.out.println("\nFile: " + (i + 1) + " at the url: " + links.get(i) + " failed to download");
+                    success += downloadImages(links.subList(i + 1, links.size()), names.subList(i + 1, names.size()), userAgent, filePath, files);
+                    i = links.size();
+                }
+                if (i != 0 && i % percentageComplete == 0) {
+                    System.out.print("∎");
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                    Thread.currentThread().interrupt();
+                }
             }
         }
-        return failures;
+        return success;
     }
 
 
@@ -121,7 +127,7 @@ public class ThreadRipper {
     private static void removeCopyCats(ArrayList<String> threadUrls) {
         ArrayList<String> copyCatUrls = new ArrayList<String>();
         for (String element: threadUrls) {
-            if (element.matches("http://boards\\.4chan\\.org/w/thread/[0-9]+/.+")) {
+            if (element.matches("http://boards\\.4chan\\.0org/w/thread/[0-9]+/.+")) {
                 String copyCatUrl = "";
                 int slashCount = 0;
                 for (int i = 0; i < element.length(); i++) {
