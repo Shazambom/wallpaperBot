@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * Created by Shazambom on 7/22/2015.
  */
 public class ThreadRipper {
-    public static void RipThread(String url) {
+    public static void RipThread(String url, String filePath) {
         try {
             UserAgent userAgent = new UserAgent();
             userAgent.visit(url);
@@ -31,7 +31,7 @@ public class ThreadRipper {
             }
 
             System.out.print("[");
-            int failures = downloadImages(links, names, userAgent);
+            int failures = downloadImages(links, names, userAgent, filePath);
             System.out.println("]");
             System.out.println(links.size() - failures + " images successfully downloaded");
 
@@ -40,7 +40,7 @@ public class ThreadRipper {
             e.printStackTrace();
         }
     }
-    private static int downloadImages(List<String> links, List<String> names, UserAgent userAgent) {
+    private static int downloadImages(List<String> links, List<String> names, UserAgent userAgent, String filePath) {
         int failures = 0;
         double percentageComplete;
         if (links.size() < 10) {
@@ -50,10 +50,10 @@ public class ThreadRipper {
         }
         for (int i = 0; i < links.size(); i++) {
             try {
-                userAgent.download(links.get(i), new File("F:\\RippedWallpapers\\" + names.get(i)));
+                userAgent.download(links.get(i), new File(filePath + names.get(i)));
             } catch (JauntException e) {
-                System.out.println();
-                failures += downloadImages(links.subList(i + 1, links.size()), names.subList(i + 1, names.size()), userAgent);
+                System.out.println("\nFile: "+ (i + 1) + " at the url: " + links.get(i) + " failed to download");
+                failures += downloadImages(links.subList(i + 1, links.size()), names.subList(i + 1, names.size()), userAgent, filePath);
                 failures++;
                 i = links.size();
             }
@@ -70,7 +70,7 @@ public class ThreadRipper {
     }
 
 
-    public static String parseLink(String link) {
+    private static String parseLink(String link) {
         String toReturn = "";
         for (int i = 0; i < link.length(); i++) {
             if (link.substring(i, i + 7).equals("http://")){
@@ -83,7 +83,7 @@ public class ThreadRipper {
         }
         return toReturn;
     }
-    public static String parseFileName(String link) {
+    private static String parseFileName(String link) {
         for (int i = 0; i < link.length(); i++) {
             if (link.substring(i, i + 3).equals("/w/")) {
                 return link.substring(i + 4);
@@ -98,33 +98,16 @@ public class ThreadRipper {
         try {
             UserAgent userAgent = new UserAgent();
             userAgent.visit(url);
-            System.out.println(userAgent.doc.getUrl());
-            Elements dividers = userAgent.doc.findEvery("<div>");
-            System.out.println(dividers.size());
-            ArrayList<Element> threads = new ArrayList<Element>();
-            ArrayList<Element> digging = new ArrayList<Element>();
-            for (Element element: dividers) {
-                System.out.println(element.toString());
-                if (element.toString().equals("<div id=\"content\">")){
-                    digging = (ArrayList)element.getChildElements();
-                }
+            Elements clickHere = userAgent.doc.findEvery("<a class=\"replylink\">");
+            for (Element element: clickHere) {
+                threadUrls.add(parseLink(element.toString()));
             }
-            System.out.println("\n" + digging.size());
-            for (Element element: digging) {
-                System.out.println(element.toString());
-                if (element.toString().equals("<div id=\"threads\">")) {
-                    threads = (ArrayList)element.getChildElements();
-                }
+            try {
+                userAgent.doc.submit("Next");
+            } catch (JauntException e) {
+                return threadUrls;
             }
-            System.out.println("\n" + threads.size());
-            for (Element element: threads) {
-                System.out.println(element.toString());
-            }
-            //For some ungodly reason I can't dig deeper into the threads <div>
-            //This really sucks, I need some way of getting the list of thread urls
-            //searching for <a> doesn't work either because the program doesn't dig deep enough
-
-
+            threadUrls.addAll(getThreads(userAgent.doc.getUrl()));
 
         } catch(JauntException e) {
             e.printStackTrace();
@@ -133,9 +116,4 @@ public class ThreadRipper {
 
         return threadUrls;
     }
-//    private static String ripThreadUrl(Element element) {
-//        String url = "";
-//
-//    }
-
 }
