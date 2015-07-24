@@ -5,7 +5,7 @@ import java.util.ArrayList;
  */
 public class Main {
     public static void main(String[] args) {
-        ThreadRipper.RipThread("http://boards.4chan.org/w/thread/1812586/wqhd-or-uhd-wallpapers");
+        ThreadRipper.RipThread("http://boards.4chan.org/w/thread/1821579/spice-and-wolf-wolf-girls");
 
         //ArrayList<String> threadUrls = ThreadRipper.getThreads("http://boards.4chan.org/w/catalog");
     }

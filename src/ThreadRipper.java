@@ -74,7 +74,7 @@ public class ThreadRipper {
                     toReturn += link.charAt(i);
                     i++;
                 }
-                return toReturn;
+                return parseLargeImage(toReturn);
             }
         }
         return toReturn;
@@ -87,6 +87,12 @@ public class ThreadRipper {
         }
         return "";
     }
+
+    private static String parseLargeImage(String link) {
+        return link.replace("s.jpg", ".jpg");
+    }
+
+
     public static ArrayList<String> getThreads(String url) {
         ArrayList<String> threadUrls = new ArrayList<String>();
         try {
