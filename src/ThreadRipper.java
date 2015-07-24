@@ -120,14 +120,13 @@ public class ThreadRipper {
             e.printStackTrace();
         }
 
-
         return threadUrls;
     }
 
     private static void removeCopyCats(ArrayList<String> threadUrls) {
         ArrayList<String> copyCatUrls = new ArrayList<String>();
         for (String element: threadUrls) {
-            if (element.matches("http://boards\\.4chan\\.0org/w/thread/[0-9]+/.+")) {
+            if (element.matches("http://boards\\.4chan\\.org/w/thread/[0-9]+/.+")) {
                 String copyCatUrl = "";
                 int slashCount = 0;
                 for (int i = 0; i < element.length(); i++) {
