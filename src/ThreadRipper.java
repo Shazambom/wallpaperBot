@@ -6,6 +6,7 @@ import com.jaunt.UserAgent;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -17,8 +18,8 @@ public class ThreadRipper {
             UserAgent userAgent = new UserAgent();
             userAgent.visit(url);
             System.out.println(userAgent.doc.getUrl());
-            Elements fileNames = userAgent.doc.findEach("<img>");
-            System.out.println(fileNames.size());
+            Elements fileNames = userAgent.doc.findEach("<a class=\"fileThumb\">");
+            System.out.println(fileNames.size() + " images found");
             ArrayList<String> links = new ArrayList<String>();
             ArrayList<String> names = new ArrayList<String>();
             for (Element element: fileNames) {
@@ -28,30 +29,33 @@ public class ThreadRipper {
                 links.set(i, parseLink(links.get(i)));
                 names.add(parseFileName(links.get(i)));
             }
-            downloadImages(links, names, userAgent, 0);
+
+            System.out.print("[");
+            int failures = downloadImages(links, names, userAgent);
+            System.out.println("]");
+            System.out.println(links.size() - failures + " images successfully downloaded");
 
 
         } catch(JauntException e) {
             e.printStackTrace();
         }
     }
-    private static void downloadImages(ArrayList<String> links, ArrayList<String> names, UserAgent userAgent, int current) {
-        System.out.print("[");
+    private static int downloadImages(List<String> links, List<String> names, UserAgent userAgent) {
+        int failures = 0;
         double percentageComplete;
         if (links.size() < 10) {
             percentageComplete = 1;
-        } else if (links.size() > 10 && links.size() < 20) {
-            percentageComplete = links.size()/10;
         } else {
-            percentageComplete = links.size()/20;
+            percentageComplete = links.size()/10;
         }
-        for (int i = current; i < links.size(); i++) {
-            current = i;
+        for (int i = 0; i < links.size(); i++) {
             try {
                 userAgent.download(links.get(i), new File("F:\\RippedWallpapers\\" + names.get(i)));
             } catch (JauntException e) {
-                System.out.print("!");
-                downloadImages(links, names, userAgent, current++);
+                System.out.println();
+                failures += downloadImages(links.subList(i + 1, links.size()), names.subList(i + 1, names.size()), userAgent);
+                failures++;
+                i = links.size();
             }
             if (i != 0 && i % percentageComplete == 0) {
                 System.out.print("∎");
@@ -62,7 +66,7 @@ public class ThreadRipper {
                 Thread.currentThread().interrupt();
             }
         }
-        System.out.println("]");
+        return failures;
     }
 
 
@@ -74,7 +78,7 @@ public class ThreadRipper {
                     toReturn += link.charAt(i);
                     i++;
                 }
-                return parseLargeImage(toReturn);
+                return (toReturn);
             }
         }
         return toReturn;
@@ -86,10 +90,6 @@ public class ThreadRipper {
             }
         }
         return "";
-    }
-
-    private static String parseLargeImage(String link) {
-        return link.replace("s.jpg", ".jpg");
     }
 
 
