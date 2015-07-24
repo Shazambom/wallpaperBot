@@ -102,6 +102,7 @@ public class ThreadRipper {
             for (Element element: clickHere) {
                 threadUrls.add(parseLink(element.toString()));
             }
+            removeCopyCats(threadUrls);
             try {
                 userAgent.doc.submit("Next");
             } catch (JauntException e) {
@@ -115,5 +116,28 @@ public class ThreadRipper {
 
 
         return threadUrls;
+    }
+
+    private static void removeCopyCats(ArrayList<String> threadUrls) {
+        ArrayList<String> copyCatUrls = new ArrayList<String>();
+        for (String element: threadUrls) {
+            if (element.matches("http://boards\\.4chan\\.org/w/thread/[0-9]+/.+")) {
+                String copyCatUrl = "";
+                int slashCount = 0;
+                for (int i = 0; i < element.length(); i++) {
+                    if (element.charAt(i) == '/') {
+                        slashCount++;
+                    }
+                    if (slashCount == 6) {
+                        break;
+                    }
+                    copyCatUrl += element.charAt(i);
+                }
+                copyCatUrls.add(copyCatUrl);
+            }
+        }
+        for (String element: copyCatUrls) {
+            threadUrls.remove(element);
+        }
     }
 }

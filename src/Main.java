@@ -12,5 +12,6 @@ public class Main {
         for (int i = 1; i < threadUrls.size(); i++) {
             ThreadRipper.RipThread(threadUrls.get(i), "F:\\RippedWallpapers\\");
         }
+        System.out.println("\nBoard Rip complete");
     }
 }
