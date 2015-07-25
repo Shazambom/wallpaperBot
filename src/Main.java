@@ -13,6 +13,7 @@ public class Main {
             ThreadRipper.RipThread(threadUrls.get(i), "F:\\RippedWallpapers\\");
         }
         System.out.println("\nBoard Rip complete");
+        System.out.println(ThreadRipper.getTotal() + " images Ripped");
 
     }
 }

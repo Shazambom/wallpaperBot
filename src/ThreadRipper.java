@@ -12,6 +12,7 @@ import java.util.List;
  * Created by Shazambom on 7/22/2015.
  */
 public class ThreadRipper {
+    private static int total;
     public static void RipThread(String url, String filePath) {
         try {
             UserAgent userAgent = new UserAgent();
@@ -46,24 +47,17 @@ public class ThreadRipper {
     }
     private static int downloadImages(List<String> links, List<String> names, UserAgent userAgent, String filePath, HashMap<Integer, String> files) {
         int success = 0;
-        double percentageComplete;
-        if (links.size() < 10) {
-            percentageComplete = links.size();
-        } else {
-            percentageComplete = links.size()/10;
-        }
         for (int i = 0; i < links.size(); i++) {
             if (!files.containsValue(names.get(i))) {
                 try {
                     userAgent.download(links.get(i), new File(filePath + names.get(i)));
                     success++;
+                    total++;
+                    System.out.print("∎");
                 } catch (JauntException e) {
                     System.out.println("\nFile: " + (i + 1) + " at the url: " + links.get(i) + " failed to download");
                     success += downloadImages(links.subList(i + 1, links.size()), names.subList(i + 1, names.size()), userAgent, filePath, files);
                     i = links.size();
-                }
-                if (i != 0 && i % percentageComplete == 0) {
-                    System.out.print("∎");
                 }
                 try {
                     Thread.sleep(1000);
@@ -119,7 +113,7 @@ public class ThreadRipper {
         } catch(JauntException e) {
             e.printStackTrace();
         }
-
+        total = 0;
         return threadUrls;
     }
 
@@ -144,5 +138,8 @@ public class ThreadRipper {
         for (String element: copyCatUrls) {
             threadUrls.remove(element);
         }
+    }
+    public static int getTotal() {
+        return total;
     }
 }
