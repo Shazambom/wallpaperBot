@@ -19,10 +19,17 @@ import org.apache.commons.io.FileUtils;
  * Next objective: Well... make ThreadRipper an objective based class instead of having it be mainly a static class. It will be a lot easier always having the filePath and url
  */
 public class ThreadRipper {
-    private static int total;
-    private static HashMap<Integer, String> duplicateNames;
-    public static void RipThread(String url, String filePath) {
-        initDuplicates(filePath);
+    private int total;
+    private HashMap<Integer, String> duplicateNames;
+    private String filePath;
+
+    public ThreadRipper(String filePath) {
+        this.filePath = filePath;
+        initDuplicates();
+        total = 0;
+    }
+
+    public void RipThread(String url) {
         try {
             UserAgent userAgent = new UserAgent();
             userAgent.visit(url);
@@ -45,7 +52,7 @@ public class ThreadRipper {
             }
 
             System.out.print("[");
-            int success = downloadImages(links, names, userAgent, filePath, files);
+            int success = downloadImages(links, names, userAgent, files);
             System.out.println("]");
             System.out.println(success + " unique images successfully downloaded");
 
@@ -54,7 +61,7 @@ public class ThreadRipper {
             e.printStackTrace();
         }
     }
-    private static int downloadImages(List<String> links, List<String> names, UserAgent userAgent, String filePath, HashMap<Integer, String> files) {
+    private int downloadImages(List<String> links, List<String> names, UserAgent userAgent, HashMap<Integer, String> files) {
         int success = 0;
         for (int i = 0; i < links.size(); i++) {
             if (!files.containsValue(names.get(i)) && !duplicateNames.containsValue(names.get(i))) {
@@ -65,7 +72,7 @@ public class ThreadRipper {
                     System.out.print("∎");
                 } catch (JauntException e) {
                     System.out.println("\nFile: " + (i + 1) + " at the url: " + links.get(i) + " failed to download");
-                    success += downloadImages(links.subList(i + 1, links.size()), names.subList(i + 1, names.size()), userAgent, filePath, files);
+                    success += downloadImages(links.subList(i + 1, links.size()), names.subList(i + 1, names.size()), userAgent, files);
                     i = links.size();
                 }
                 try {
@@ -79,7 +86,7 @@ public class ThreadRipper {
     }
 
 
-    private static String parseLink(String link) {
+    private String parseLink(String link) {
         String toReturn = "";
         for (int i = 0; i < link.length(); i++) {
             if (link.substring(i, i + 7).equals("http://")){
@@ -92,7 +99,7 @@ public class ThreadRipper {
         }
         return toReturn;
     }
-    private static String parseFileName(String link) {
+    private String parseFileName(String link) {
         for (int i = 0; i < link.length(); i++) {
             if (link.substring(i, i + 3).equals("/w/")) {
                 return link.substring(i + 4);
@@ -102,7 +109,7 @@ public class ThreadRipper {
     }
 
 
-    public static ArrayList<String> getThreads(String url) {
+    public ArrayList<String> getThreads(String url) {
         ArrayList<String> threadUrls = new ArrayList<String>();
         try {
             UserAgent userAgent = new UserAgent();
@@ -122,11 +129,10 @@ public class ThreadRipper {
         } catch(JauntException e) {
             e.printStackTrace();
         }
-        total = 0;
         return threadUrls;
     }
 
-    private static void removeCopyCats(ArrayList<String> threadUrls) {
+    private void removeCopyCats(ArrayList<String> threadUrls) {
         ArrayList<String> copyCatUrls = new ArrayList<String>();
         for (String element: threadUrls) {
             if (element.matches("http://boards\\.4chan\\.org/w/thread/[0-9]+/.+")) {
@@ -148,11 +154,11 @@ public class ThreadRipper {
             threadUrls.remove(element);
         }
     }
-    public static int getTotal() {
+    public int getTotal() {
         return total;
     }
 
-    public static void cleanUp(String filePath) {
+    public void cleanUp() {
         ArrayList<File> folder = new ArrayList<File>();
         for (File element: new File(filePath).listFiles()){
             folder.add(element);
@@ -176,13 +182,13 @@ public class ThreadRipper {
             System.out.println("]");
             System.out.println(toRemove.size() + " duplicates found");
             System.out.println("Removing Duplicates...");
-            resolveDuplicates(toRemove, filePath);
+            resolveDuplicates(toRemove);
         } catch (Exception e) {
             System.out.println("Well shit");
             e.printStackTrace();
         }
     }
-    private static void resolveDuplicates(ArrayList<File> toRemove, String filePath) {
+    private void resolveDuplicates(ArrayList<File> toRemove) {
         try {
             PrintWriter out = new PrintWriter(filePath + "duplicates.txt");
             for (Map.Entry element: duplicateNames.entrySet()) {
@@ -197,7 +203,7 @@ public class ThreadRipper {
             e.printStackTrace();
         }
     }
-    private static void initDuplicates(String filePath) {
+    private void initDuplicates() {
         try {
             File duplicates = new File(filePath + "duplicates.txt");
             FileReader fileReader = new FileReader(duplicates);
