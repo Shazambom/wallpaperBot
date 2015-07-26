@@ -3,17 +3,26 @@ import com.jaunt.Elements;
 import com.jaunt.JauntException;
 import com.jaunt.UserAgent;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.io.FileUtils;
 
 /**
- * Created by Shazambom on 7/22/2015.
+ * Next objective: Well... make ThreadRipper an objective based class instead of having it be mainly a static class. It will be a lot easier always having the filePath and url
  */
 public class ThreadRipper {
     private static int total;
+    private static HashMap<Integer, String> duplicateNames;
     public static void RipThread(String url, String filePath) {
+        initDuplicates(filePath);
         try {
             UserAgent userAgent = new UserAgent();
             userAgent.visit(url);
@@ -29,9 +38,9 @@ public class ThreadRipper {
                 links.set(i, parseLink(links.get(i)));
                 names.add(parseFileName(links.get(i)));
             }
-            String[] foulder = new File(filePath).list();
+            String[] folder = new File(filePath).list();
             HashMap<Integer, String> files = new HashMap<Integer, String>();
-            for (String element: foulder) {
+            for (String element: folder) {
                 files.put(element.hashCode(), element);
             }
 
@@ -48,7 +57,7 @@ public class ThreadRipper {
     private static int downloadImages(List<String> links, List<String> names, UserAgent userAgent, String filePath, HashMap<Integer, String> files) {
         int success = 0;
         for (int i = 0; i < links.size(); i++) {
-            if (!files.containsValue(names.get(i))) {
+            if (!files.containsValue(names.get(i)) && !duplicateNames.containsValue(names.get(i))) {
                 try {
                     userAgent.download(links.get(i), new File(filePath + names.get(i)));
                     success++;
@@ -141,5 +150,67 @@ public class ThreadRipper {
     }
     public static int getTotal() {
         return total;
+    }
+
+    public static void cleanUp(String filePath) {
+        ArrayList<File> folder = new ArrayList<File>();
+        for (File element: new File(filePath).listFiles()){
+            folder.add(element);
+        }
+        ArrayList<File> toRemove = new ArrayList<File>();
+        try {
+            System.out.print("[");
+            double percentage = folder.size() / 100;
+            for (int i = 0; i < folder.size(); i++) {
+                if (!toRemove.contains(folder.get(i))) {
+                    for (int j = i + 1; j < folder.size(); j++) {
+                        if (FileUtils.contentEquals(folder.get(i), folder.get(j))){
+                            toRemove.add(folder.get(j));
+                        }
+                    }
+                }
+                if (i % percentage == 0) {
+                    System.out.print("∎");
+                }
+            }
+            System.out.println("]");
+            System.out.println(toRemove.size() + " duplicates found");
+            System.out.println("Removing Duplicates...");
+            resolveDuplicates(toRemove, filePath);
+        } catch (Exception e) {
+            System.out.println("Well shit");
+            e.printStackTrace();
+        }
+    }
+    private static void resolveDuplicates(ArrayList<File> toRemove, String filePath) {
+        try {
+            PrintWriter out = new PrintWriter(filePath + "duplicates.txt");
+            for (Map.Entry element: duplicateNames.entrySet()) {
+                out.println(element.getValue());
+            }
+            for (File element: toRemove) {
+                out.println(element.getName());
+                Files.delete(element.toPath());
+            }
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private static void initDuplicates(String filePath) {
+        try {
+            File duplicates = new File(filePath + "duplicates.txt");
+            FileReader fileReader = new FileReader(duplicates);
+            BufferedReader in = new BufferedReader(fileReader);
+            duplicateNames = new HashMap<Integer, String>();
+            String line;
+            while ((line = in.readLine()) != null) {
+                duplicateNames.put(line.hashCode(), line);
+            }
+            in.close();
+            fileReader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

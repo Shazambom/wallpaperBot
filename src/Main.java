@@ -14,6 +14,9 @@ public class Main {
         }
         System.out.println("\nBoard Rip complete");
         System.out.println(ThreadRipper.getTotal() + " images Ripped");
+        System.out.println("Cleaning up foulder...");
+        ThreadRipper.cleanUp("F:\\RippedWallpapers\\");
+        System.out.println("Cleanup complete");
 
     }
 }
