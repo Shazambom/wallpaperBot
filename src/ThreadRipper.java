@@ -21,9 +21,11 @@ public class ThreadRipper {
     private int total;
     private HashMap<Integer, String> duplicateNames;
     private String filePath;
+    private String dumpFilePath;
 
     public ThreadRipper(String filePath) {
         this.filePath = filePath;
+        this.dumpFilePath = filePath + "Dump\\";
         initDuplicates();
         total = 0;
     }
@@ -168,15 +170,17 @@ public class ThreadRipper {
             double percentage = folder.size() / 100;
             for (int i = 0; i < folder.size(); i++) {
                 if (!toRemove.contains(folder.get(i))) {
-                    //May throw an error if the file isn't exactly an image
-                    //make sure to catch all the edge cases with this thing
-                    BufferedImage image = ImageIO.read(folder.get(i));
-                    if (image.getHeight() < 600 || image.getWidth() < 800
-                            || image.getHeight() >= image.getWidth()) {
-                        toRemove.add(folder.get(i));
+                    try {
+                        BufferedImage image = ImageIO.read(folder.get(i));
+                        if (image.getHeight() < 720 || image.getWidth() < 1080){
+                            toRemove.add(folder.get(i));
+                        }
+                    } catch (Exception e) {
+                        continue;
                     }
                     for (int j = i + 1; j < folder.size(); j++) {
-                        if (FileUtils.contentEquals(folder.get(i), folder.get(j))){
+                        if (folder.get(i).isFile() && folder.get(j).isFile()
+                                && FileUtils.contentEquals(folder.get(i), folder.get(j))){
                             toRemove.add(folder.get(j));
                         }
                     }
@@ -200,9 +204,18 @@ public class ThreadRipper {
             for (Map.Entry element: duplicateNames.entrySet()) {
                 out.println(element.getValue());
             }
+            if (!(new File(dumpFilePath).isDirectory())) {
+                Files.createDirectory(new File(dumpFilePath).toPath());
+            }
             for (File element: toRemove) {
                 out.println(element.getName());
-                Files.delete(element.toPath());
+                if (element.renameTo(new File(dumpFilePath + element.getName()))) {
+                    System.out.println("Move successful");
+                } else {
+                    Files.delete(element.toPath());
+                    System.out.println("File deleted");
+                }
+
             }
             out.close();
         } catch (Exception e) {

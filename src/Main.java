@@ -42,5 +42,10 @@ public class Main {
         };
         timer.schedule(hourlyTask, 0l, 1000*60*60);
 
+//        ThreadRipper threadRipper = new ThreadRipper("F:\\Testing\\");
+//        System.out.println("Cleaning up folder...");
+//        threadRipper.cleanUp();
+//        System.out.println("Cleanup complete");
+
     }
 }
