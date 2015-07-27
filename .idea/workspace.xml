@@ -42,8 +42,8 @@
       <file leaf-file-name="ThreadRipper.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ThreadRipper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.42016807" vertical-offset="2315" max-vertical-offset="3450">
-              <caret line="173" column="52" selection-start-line="173" selection-start-column="52" selection-end-line="173" selection-end-column="52" />
+            <state vertical-scroll-proportion="0.29411766" vertical-offset="2360" max-vertical-offset="3480">
+              <caret line="171" column="75" selection-start-line="171" selection-start-column="75" selection-end-line="171" selection-end-column="75" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#5591#5597#0" expanded="true" />
@@ -612,8 +612,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ThreadRipper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.42016807" vertical-offset="2315" max-vertical-offset="3450">
-          <caret line="173" column="52" selection-start-line="173" selection-start-column="52" selection-end-line="173" selection-end-column="52" />
+        <state vertical-scroll-proportion="0.29411766" vertical-offset="2360" max-vertical-offset="3480">
+          <caret line="171" column="75" selection-start-line="171" selection-start-column="75" selection-end-line="171" selection-end-column="75" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#5591#5597#0" expanded="true" />

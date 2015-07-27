@@ -168,6 +168,8 @@ public class ThreadRipper {
             double percentage = folder.size() / 100;
             for (int i = 0; i < folder.size(); i++) {
                 if (!toRemove.contains(folder.get(i))) {
+                    //May throw an error if the file isn't exactly an image
+                    //make sure to catch all the edge cases with this thing
                     BufferedImage image = ImageIO.read(folder.get(i));
                     if (image.getHeight() < 600 || image.getWidth() < 800
                             || image.getHeight() >= image.getWidth()) {
