@@ -3,6 +3,8 @@ import com.jaunt.Elements;
 import com.jaunt.JauntException;
 import com.jaunt.UserAgent;
 
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -166,6 +168,11 @@ public class ThreadRipper {
             double percentage = folder.size() / 100;
             for (int i = 0; i < folder.size(); i++) {
                 if (!toRemove.contains(folder.get(i))) {
+                    BufferedImage image = ImageIO.read(folder.get(i));
+                    if (image.getHeight() < 600 || image.getWidth() < 800
+                            || image.getHeight() >= image.getWidth()) {
+                        toRemove.add(folder.get(i));
+                    }
                     for (int j = i + 1; j < folder.size(); j++) {
                         if (FileUtils.contentEquals(folder.get(i), folder.get(j))){
                             toRemove.add(folder.get(j));
@@ -177,8 +184,8 @@ public class ThreadRipper {
                 }
             }
             System.out.println("]");
-            System.out.println(toRemove.size() + " duplicates found");
-            System.out.println("Removing Duplicates...");
+            System.out.println(toRemove.size() + " invalid wallpapers found");
+            System.out.println("Resolving invalid wallpapers...");
             resolveDuplicates(toRemove);
         } catch (Exception e) {
             System.out.println("Well shit");
