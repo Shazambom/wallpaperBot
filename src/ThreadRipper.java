@@ -15,9 +15,6 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 
-/**
- * Next objective: Well... make ThreadRipper an objective based class instead of having it be mainly a static class. It will be a lot easier always having the filePath and url
- */
 public class ThreadRipper {
     private int total;
     private HashMap<Integer, String> duplicateNames;
