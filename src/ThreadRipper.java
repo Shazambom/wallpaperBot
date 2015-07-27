@@ -207,16 +207,17 @@ public class ThreadRipper {
             if (!(new File(dumpFilePath).isDirectory())) {
                 Files.createDirectory(new File(dumpFilePath).toPath());
             }
+            System.out.print("[");
             for (File element: toRemove) {
                 out.println(element.getName());
                 if (element.renameTo(new File(dumpFilePath + element.getName()))) {
-                    System.out.println("Move successful");
+                    System.out.print("∎");
                 } else {
                     Files.delete(element.toPath());
-                    System.out.println("File deleted");
+                    System.out.print("!");
                 }
-
             }
+            System.out.println("]");
             out.close();
         } catch (Exception e) {
             e.printStackTrace();
