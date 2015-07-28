@@ -40,7 +40,7 @@ public class Main {
                 System.out.println("Cleanup complete");
             }
         };
-        timer.schedule(hourlyTask, 0l, 1000*60*60);
+        timer.schedule(hourlyTask, 0l, 1000*60*60*6);
 
 //        ThreadRipper threadRipper = new ThreadRipper("F:\\Testing\\");
 //        System.out.println("Cleaning up folder...");

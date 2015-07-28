@@ -210,6 +210,7 @@ public class ThreadRipper {
             System.out.print("[");
             for (File element: toRemove) {
                 out.println(element.getName());
+
                 if (element.renameTo(new File(dumpFilePath + element.getName()))) {
                     System.out.print("∎");
                 } else {
@@ -235,8 +236,18 @@ public class ThreadRipper {
             }
             in.close();
             fileReader.close();
+            if (duplicateNames.size() == 0) {
+                duplicateNames.put(-1, "PlaceHolder");
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                PrintWriter out = new PrintWriter(filePath + "duplicates.txt");
+                out.println("");
+                out.close();
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+
         }
     }
 }
