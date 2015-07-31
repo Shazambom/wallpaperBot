@@ -30,6 +30,11 @@ public class ThreadRipper {
         total = 0;
     }
 
+    public void setFilePath(String filePath){
+        this.filePath = filePath;
+    }
+
+
     public void RipThread(String url) {
         try {
             UserAgent userAgent = new UserAgent();
@@ -65,7 +70,7 @@ public class ThreadRipper {
     private int downloadImages(List<String> links, List<String> names, UserAgent userAgent, HashMap<Integer, String> files) {
         int success = 0;
         for (int i = 0; i < links.size(); i++) {
-            if (!files.containsValue(names.get(i)) && !duplicateNames.containsValue(names.get(i))) {
+            if ((files.size() == 0 || !files.containsValue(names.get(i))) && !duplicateNames.containsValue(names.get(i))) {
                 try {
                     userAgent.download(links.get(i), new File(filePath + names.get(i)));
                     success++;
@@ -226,19 +231,21 @@ public class ThreadRipper {
     }
     private void initDuplicates() {
         try {
+            duplicateNames = new HashMap<Integer, String>();
             File duplicates = new File(filePath + "duplicates.txt");
             FileReader fileReader = new FileReader(duplicates);
             BufferedReader in = new BufferedReader(fileReader);
-            duplicateNames = new HashMap<Integer, String>();
+
             String line;
             while ((line = in.readLine()) != null) {
                 duplicateNames.put(line.hashCode(), line);
             }
+            if (duplicateNames.size() == 0) {
+                duplicateNames.put(1, "PlaceHolder");
+            }
             in.close();
             fileReader.close();
-            if (duplicateNames.size() == 0) {
-                duplicateNames.put(-1, "PlaceHolder");
-            }
+
         } catch (Exception e) {
             try {
                 PrintWriter out = new PrintWriter(filePath + "duplicates.txt");
