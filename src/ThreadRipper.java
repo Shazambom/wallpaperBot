@@ -49,7 +49,7 @@ public class ThreadRipper {
             }
             for (int i = 0; i < links.size(); i++) {
                 links.set(i, parseLink(links.get(i)));
-                names.add(parseFileName(links.get(i)));
+                names.add(parseThreadName(userAgent.doc.getUrl()) + "_" + parseFileName(links.get(i)));
             }
             String[] folder = new File(filePath).list();
             HashMap<Integer, String> files = new HashMap<Integer, String>();
@@ -256,5 +256,20 @@ public class ThreadRipper {
             }
 
         }
+    }
+
+    private String parseThreadName(String threadName) {
+        String name = threadName.substring(33);
+        String toReturn = "";
+        boolean isName = false;
+        for (int i = 0; i < name.length(); i++) {
+            if (isName) {
+                toReturn += name.charAt(i);
+            }
+            if (name.charAt(i) == '/') {
+                isName = true;
+            }
+        }
+        return toReturn;
     }
 }
