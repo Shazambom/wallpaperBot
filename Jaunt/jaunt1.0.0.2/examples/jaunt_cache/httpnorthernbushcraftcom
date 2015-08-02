@@ -1,0 +1,178 @@
+<html>
+<head>
+<title>Northern Bushcraft - Foraging in the Pacific Northwest</title>
+<meta name="description" content="Bushcraft and foraging guides for wild edible plants, edible mushrooms and berries in the Pacific Northwest and Canada, including British Columbia (BC), Washington, Oregon, Alberta, Manitoba, Saskatchewan, Ontario, the Maritimes, Newfoundland, the Yukon, NW Territories, Nunavut and Alaska.">
+<link rel=StyleSheet href="style.css" type="text/css">
+<meta name="verify-v1" content="o4BvSg6s/vj6pfxjW9pPhiy/hRS581k3srzwnpkLCFw=" />
+
+<style>
+div.categoryName{				color:#369;
+}
+table#provinces th{				text-align:left;}
+table#provinces td{	            vertical-align:top;
+								padding-left:2.5ex;
+}
+</style>
+<script src="script.js"></script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-20603504-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body class='home' onLoad="loadImg(10)">
+<img alt="Northern Bushcraft" src="banner.jpg" style="border-bottom:1px solid black">
+
+<div class='mainMenuBar'>
+Northern Bushcraft &gt;
+</div>
+
+<table width="825" border=0>
+<tr><td width="525" valign="top" class='textcell' style='padding-left:1.5em'>
+
+<h2><div class='categoryName'>Foraging in the Pacific Northwest</div></h2>
+<p>
+The following guides are for identifying wild edible plants, edible mushrooms, seaweed, and other edibles in the Pacific Northwest, including British Columbia, Washington, Oregon, Alaska, Idaho, and the Rocky Mountains.
+</p>
+<div><a href='berries/index.htm'>Edible berries</a> <span class='entryCount'>(29)</span></div>
+<div><a href='invertebrates/index.htm'>Edible invertebrates</a> <span class='entryCount'>(10)</span></div>
+<div><a href='mushrooms/index.htm'>Wild edible mushrooms</a> <span class='entryCount'>(32)</span></div>
+<div><a href='plants/index.htm'>Wild edible plants</a> <span class='entryCount'>(61)</span></div>
+<div><a href='seaweed/index.htm'>Edible seaweed</a> <span class='entryCount'>(6)</span></div>
+<br>
+
+<h2><div class='categoryName'>Foraging in Canada</div></h2>
+
+<table id="provinces">
+
+<tr>
+  <th>BC:</th>
+  <td><nobr><a href='/guide.php?ctgy=edible_berries&region=bc'><span style="display:none">Edible </span>Berries</a> <span class='entryCount'>(33)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_plants&region=bc'><span style="display:none">Edible </span>Plants</a> <span class='entryCount'>(92)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_mushrooms&region=bc'><span style="display:none">Edible </span>Mushrooms</a> <span class='entryCount'>(32)</nobr></td>
+</tr>
+<tr>
+  <th>Alberta:</th>
+  <td><nobr><a href='/guide.php?ctgy=edible_berries&region=ab'><span style="display:none">Edible </span>Berries</a> <span class='entryCount'>(25)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_plants&region=ab'><span style="display:none">Edible </span>Plants</a> <span class='entryCount'>(84)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_mushrooms&region=alberta'><span style="display:none">Edible </span>Mushrooms</a> <span class='entryCount'>(28)</nobr></td>
+</tr> 
+<tr>
+  <th>Saskatchewan:</th>
+  <td><nobr><a href='/guide.php?ctgy=edible_berries&region=sk'><span style="display:none">Edible </span>Berries</a> <span class='entryCount'>(22)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_plants&region=sk'><span style="display:none">Edible </span>Plants</a> <span class='entryCount'>(75)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_mushrooms&region=saskatchewan'><span style="display:none">Edible </span>Mushrooms</a> <span class='entryCount'>(15)</nobr></td>
+</tr>
+
+<tr>
+  <th>Manitoba:</th>
+  <td><nobr><a href='/guide.php?ctgy=edible_berries&region=mb'><span style="display:none">Edible </span>Berries</a> <span class='entryCount'>(22)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_plants&region=mb'><span style="display:none">Edible </span>Plants</a> <span class='entryCount'>(80)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_mushrooms&region=manitoba'><span style="display:none">Edible </span>Mushroooms</a> <span class='entryCount'>(23)</nobr></td>
+</tr>
+
+<tr>
+  <th>Ontario:</th>
+  <td><nobr><a href='/guide.php?ctgy=edible_Berries&region=on'><span style="display:none">Edible </span>Berries</a> <span class='entryCount'>(32)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_plants&region=on'><span style="display:none">Edible </span>Plants</a> <span class='entryCount'>(89)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_mushrooms&region=ontario'><span style="display:none">Edible </span>Mushroooms</a> <span class='entryCount'>(29)</nobr></td>
+
+</tr>
+
+<tr>
+  <th>Quebec:</th>
+  <td><nobr><a href='/guide.php?ctgy=edible_berries&region=qc'><span style="display:none">Edible </span>Berries</a> <span class='entryCount'>(27)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_plants&region=qc'><span style="display:none">Edible </span>Plants</a> <span class='entryCount'>(88)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_mushrooms&region=quebec'><span style="display:none">Edible </span>Mushroooms</a> <span class='entryCount'>(30)</nobr></td>
+</tr>
+
+<tr>
+  <th><nobr>New Brunswick:</nobr></th>
+  <td><nobr><a href='/guide.php?ctgy=edible_berries&region=nb'><span style="display:none">Edible </span>Berries</a> <span class='entryCount'>(26)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_plants&region=nb'><span style="display:none">Edible </span>Plants</a> <span class='entryCount'>(80)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_mushrooms&region=new-brunswick'><span style="display:none">Edible </span>Mushroooms</a> <span class='entryCount'>(25)</nobr></td>
+</tr>
+
+<tr>
+  <th>Nova Scotia:</th>
+  <td><nobr><a href='/guide.php?ctgy=edible_berries&region=ns'><span style="display:none">Edible </span>Berries</a> <span class='entryCount'>(25)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_plants&region=ns'><span style="display:none">Edible </span>Plants</a> <span class='entryCount'>(77)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_mushrooms&region=nova-scotia'><span style="display:none">Edible </span>Mushroooms</a> <span class='entryCount'>(31)</nobr></td>
+</tr>
+
+<tr>
+  <th>Newfoundland:</th>
+  <td><nobr><a href='/guide.php?ctgy=edible_berries&region=nl'><span style="display:none">Edible </span>Berries</a> <span class='entryCount'>(18)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_plants&region=nl'><span style="display:none">Edible </span>Plants</a> <span class='entryCount'>(72)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_mushrooms&region=newfoundland'><span style="display:none">Edible </span>Mushrooms</a> <span class='entryCount'>(21)</nobr></td>
+</tr>
+
+<tr>
+  <th>Labrador:</th>
+  <td><nobr><a href='/guide.php?ctgy=edible_berries&region=lb'><span style="display:none">Edible </span>Berries</a> <span class='entryCount'>(15)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_plants&region=lb'><span style="display:none">Edible </span>Plants</a> <span class='entryCount'>(65)</nobr></td>
+  <td>see above.</td>
+</tr>
+
+<tr>
+  <th>PEI:</th>
+  <td><nobr><a href='/guide.php?ctgy=edible_berries&region=pe'><span style="display:none">Edible </span>Berries</a> <span class='entryCount'>(21)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_plants&region=pe'><span style="display:none">Edible </span>Plants</a> <span class='entryCount'>(69)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_mushrooms&region=prince-edward-island'><span style="display:none">Edible </span>Mushrooms</a> <span class='entryCount'>(19)</nobr></td>
+</tr>
+
+<tr>
+  <th>Yukon:</th>
+  <td><nobr><a href='/guide.php?ctgy=edible_berries&region=yt'><span style="display:none">Edible </span>Berries</a> <span class='entryCount'>(16)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_plants&region=yt'><span style="display:none">Edible </span>Plants</a> <span class='entryCount'>(53)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_mushrooms&region=yukon'><span style="display:none">Edible </span>Mushrooms</a> <span class='entryCount'>(19)</nobr></td>
+</tr>
+
+<tr>
+  <th><nobr>NW Territories:</nobr></th>
+  <td><nobr><a href='/guide.php?ctgy=edible_berries&region=nt'><span style="display:none">Edible </span>Berries</a> <span class='entryCount'>(16)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_plants&region=nt'><span style="display:none">Edible </span>Plants</a> <span class='entryCount'>(52)</nobr></td>
+  <td></td>
+</tr>
+
+<tr>
+  <th>Nunavut:</th>
+  <td><nobr><a href='/guide.php?ctgy=edible_berries&region=nu'><span style="display:none">Edible </span>Berries</a> <span class='entryCount'>(13)</nobr></td>
+  <td><nobr><a href='/guide.php?ctgy=edible_plants&region=nu'><span style="display:none">Edible </span>Plants</a> <span class='entryCount'>(46)</nobr></td>
+  <td></td>
+</tr>
+</table>
+<br>
+
+
+<h2><div class='categoryName'>Bushcraft</div></h2>
+
+
+<!--div><a href='gulfIslands/freecamping.htm'>Free-camping and Bushcraft on the Gulf Islands (BC)</a></div-->
+<div><a href="animalTracks/index.htm">Northern Animal Tracks</a> <span class='entryCount'>(15)</span></div>
+
+</td>
+<td valign="top">
+<img class="mainPic" name="splash" width="300">
+</td>
+</tr>
+</table>
+
+<div class='lowerMenuBar'>
+<a href="references.htm">references</a> | <a href="feedback.htm">feedback</a> |  
+</div>
+</body>
+<html>
+
+
+
+
+

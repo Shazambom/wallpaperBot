@@ -215,7 +215,6 @@ public class ThreadRipper {
             System.out.print("[");
             for (File element: toRemove) {
                 out.println(element.getName());
-
                 if (element.renameTo(new File(dumpFilePath + element.getName()))) {
                     System.out.print("∎");
                 } else {
@@ -240,16 +239,17 @@ public class ThreadRipper {
             while ((line = in.readLine()) != null) {
                 duplicateNames.put(line.hashCode(), line);
             }
-            if (duplicateNames.size() == 0) {
-                duplicateNames.put(1, "PlaceHolder");
-            }
             in.close();
             fileReader.close();
 
         } catch (Exception e) {
             try {
+                ArrayList<String> dupNames = traverseFiles(new File(filePath).getParentFile());
                 PrintWriter out = new PrintWriter(filePath + "duplicates.txt");
-                out.println("");
+                for (String element: dupNames) {
+                    out.println(element);
+                    duplicateNames.put(element.hashCode(), element);
+                }
                 out.close();
             } catch (Exception exception) {
                 exception.printStackTrace();
@@ -272,4 +272,20 @@ public class ThreadRipper {
         }
         return toReturn;
     }
+
+    private ArrayList<String> traverseFiles(File file) {
+        ArrayList<String> toReturn = new ArrayList<String>();
+        File[] files = file.listFiles();
+        if (files.length > 0) {
+            for (File element : files) {
+                if (element.isDirectory()) {
+                    toReturn.addAll(traverseFiles(element));
+                } else {
+                    toReturn.add(element.getName());
+                }
+            }
+        }
+        return toReturn;
+    }
+
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<messageList>
+  <message id="0">Hello there</message>
+  <message id="1">What's up?</message>
+  <message id="3">Anyone there?</message>
+  <notification type="disconnection"/>
+</messageList>

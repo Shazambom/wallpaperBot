@@ -1,0 +1,13 @@
+Jaunt 1.0.0.2 Release Notes
+
+Jaunt 1.0.0.2 is a free Java API that makes web scraping & automation easier.
+
+Jaunt 1.0.0.2 public release date: July 31, 2015
+Jaunt 1.0.0.2 software expiry date: August 31, 2015
+
+Installation Instructions & Quickstart Tutorial
+http://jaunt-api.com/jaunt-tutorial.htm
+
+CHANGES FOR v 1.0.0.2
+
+No changes to the library.
