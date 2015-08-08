@@ -246,7 +246,7 @@ public class ThreadRipper {
         } catch (Exception e) {
             try {
                 ArrayList<String> dupNames = traverseFiles(new File(filePath).getParentFile());
-                PrintWriter out = new PrintWriter(filePath + "duplicates.txt");
+                PrintWriter out = new PrintWriter(new File(filePath + "duplicates.txt"));
                 for (String element: dupNames) {
                     out.println(element);
                     duplicateNames.put(element.hashCode(), element);
@@ -276,7 +276,7 @@ public class ThreadRipper {
 
     private ArrayList<String> traverseFiles(File file) {
         ArrayList<String> toReturn = new ArrayList<String>();
-        if (file != null) {
+        if (file.listFiles() != null) {
             File[] files = file.listFiles();
             if (files.length > 0) {
                 for (File element : files) {
