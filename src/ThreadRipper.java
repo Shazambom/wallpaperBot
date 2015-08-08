@@ -160,6 +160,7 @@ public class ThreadRipper {
             threadUrls.remove(element);
         }
     }
+
     public int getTotal() {
         return total;
     }
@@ -275,13 +276,15 @@ public class ThreadRipper {
 
     private ArrayList<String> traverseFiles(File file) {
         ArrayList<String> toReturn = new ArrayList<String>();
-        File[] files = file.listFiles();
-        if (files.length > 0) {
-            for (File element : files) {
-                if (element.isDirectory()) {
-                    toReturn.addAll(traverseFiles(element));
-                } else {
-                    toReturn.add(element.getName());
+        if (file != null) {
+            File[] files = file.listFiles();
+            if (files.length > 0) {
+                for (File element : files) {
+                    if (element.isDirectory()) {
+                        toReturn.addAll(traverseFiles(element));
+                    } else {
+                        toReturn.add(element.getName());
+                    }
                 }
             }
         }
