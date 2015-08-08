@@ -53,8 +53,10 @@ public class ThreadRipper {
             }
             String[] folder = new File(filePath).list();
             HashMap<Integer, String> files = new HashMap<Integer, String>();
-            for (String element: folder) {
-                files.put(element.hashCode(), element);
+            if (folder != null) {
+                for (String element : folder) {
+                    files.put(element.hashCode(), element);
+                }
             }
 
             System.out.print("[");
