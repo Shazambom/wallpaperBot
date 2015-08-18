@@ -4,7 +4,15 @@ import praw       #to post links to reddit/r/slashw
 
 CLIENT_ID = '2e6582b4e4109df'
 CLIENT_SECRET = '9a0e29fb2220d772a81a56a0d3a4f9fee9d8b29b'
-IMAGE_PATH = 'F:\\RippedWallpapers\\Y2015_W31\\*.*'
+JPG_PATH = '/home/yash/Ian4chanProject/Images/*.jpg'
+JPEG_PATH = '/home/yash/Ian4chanProject/Images/*.jpeg'
+PNG_PATH = '/home/yash/Ian4chanProject/Images/*.png'
+APNG_PATH = '/home/yash/Ian4chanProject/Images/*.apng'
+BMP_PATH = '/home/yash/Ian4chanProject/Images/*.bmp'
+TIFF_PATH = '/home/yash/Ian4chanProject/Images/*.tiff'
+TIF_PATH = '/home/yash/Ian4chanProject/Images/*.tif'
+XCF_PATH = '/home/yash/Ian4chanProject/Images/*.xcf'
+PDF_PATH = '/home/yash/Ian4chanProject/Images/*.pdf'
 
 USER_AGENT = '4chan /w/ crossposter for /u/Shazambom'
 USERNAME = 'SmallTextReader'
@@ -16,7 +24,18 @@ imgur = pyimgur.Imgur(CLIENT_ID, CLIENT_SECRET)
 image_links = []
 
 def upload_to_imgur():
-    filenames = glob.glob(IMAGE_PATH)
+    
+    filenames = []
+    filenames.extend(glob.glob(JPG_PATH))
+    filenames.extend(glob.glob(JPEG_PATH))
+    filenames.extend(glob.glob(PNG_PATH))
+    filenames.extend(glob.glob(APNG_PATH))
+    filenames.extend(glob.glob(BMP_PATH))
+    filenames.extend(glob.glob(TIF_PATH))
+    filenames.extend(glob.glob(TIFF_PATH))
+    filenames.extend(glob.glob(PDF_PATH))
+    filenames.extend(glob.glob(XCF_PATH))
+    
     threads = []
     already_done = []
     for filename in filenames:
@@ -31,8 +50,7 @@ def upload_to_imgur():
             for image_filename in album:
                 album_images.append(imgur.upload_image(image_filename))
                 print ('uploaded')
-            album_title = thread.rsplit('\\', 1)[-1]
-            print (album_title)
+            album_title = thread.rsplit('/', 1)[-1]  #removes everything before last '/'
             image_links.append(imgur.create_album(title=album_title, images=album_images).link)
             print ('album created')
             already_done.append(thread)
