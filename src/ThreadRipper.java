@@ -21,10 +21,11 @@ public class ThreadRipper {
     private int total;
     private HashMap<Integer, String> duplicateNames;
     private String filePath;
+    private File duplicates;
 
     public ThreadRipper(String filePath) {
         this.filePath = filePath;
-        initDuplicates();
+        duplicates = initDuplicates();
         total = 0;
     }
 
@@ -167,9 +168,17 @@ public class ThreadRipper {
 
     public void cleanUp() {
         ArrayList<File> folder = new ArrayList<File>();
-        for (File element: new File(filePath).listFiles()){
-            folder.add(element);
+        try {
+            PrintWriter out = new PrintWriter(duplicates);
+            for (File element : new File(filePath).listFiles()) {
+                folder.add(element);
+                out.println(element.getName());
+            }
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         ArrayList<File> toRemove = new ArrayList<File>();
         try {
             System.out.print("[");
@@ -206,26 +215,20 @@ public class ThreadRipper {
     }
     private void resolveDuplicates(ArrayList<File> toRemove) {
         try {
-            PrintWriter out = new PrintWriter(filePath + "duplicates.txt");
-            for (Map.Entry element: duplicateNames.entrySet()) {
-                out.println(element.getValue());
-            }
             System.out.print("[");
             for (File element: toRemove) {
-                out.println(element.getName());
                 Files.delete(element.toPath());
                 System.out.print("∎");
             }
             System.out.println("]");
-            out.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    private void initDuplicates() {
+    private File initDuplicates() {
         try {
             duplicateNames = new HashMap<Integer, String>();
-            File duplicates = new File(filePath + "duplicates.txt");
+            File duplicates = new File(new File(filePath).getParentFile().getPath() + "/duplicates.txt");
             FileReader fileReader = new FileReader(duplicates);
             BufferedReader in = new BufferedReader(fileReader);
 
@@ -235,21 +238,20 @@ public class ThreadRipper {
             }
             in.close();
             fileReader.close();
+            return duplicates;
 
         } catch (Exception e) {
             try {
-                ArrayList<String> dupNames = traverseFiles(new File(filePath).getParentFile());
-                PrintWriter out = new PrintWriter(new File(filePath + "duplicates.txt"));
-                for (String element: dupNames) {
-                    out.println(element);
-                    duplicateNames.put(element.hashCode(), element);
-                }
+                PrintWriter out = new PrintWriter(new File(new File(filePath).getParentFile().getPath() + "/duplicates.txt"));
+                out.print("\n");
                 out.close();
+                return new File(new File(filePath).getParentFile().getPath() + "/duplicates.txt");
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
 
         }
+        return new File(new File(filePath).getParentFile().getPath() + "/duplicates.txt");
     }
 
     private String parseThreadName(String threadName) {
@@ -262,23 +264,6 @@ public class ThreadRipper {
             }
             if (name.charAt(i) == '/') {
                 isName = true;
-            }
-        }
-        return toReturn;
-    }
-
-    private ArrayList<String> traverseFiles(File file) {
-        ArrayList<String> toReturn = new ArrayList<String>();
-        if (file.listFiles() != null) {
-            File[] files = file.listFiles();
-            if (files.length > 0) {
-                for (File element : files) {
-                    if (element.isDirectory()) {
-                        toReturn.addAll(traverseFiles(element));
-                    } else {
-                        toReturn.add(element.getName());
-                    }
-                }
             }
         }
         return toReturn;
