@@ -4,7 +4,7 @@ import praw       #to post links to reddit/r/slashw
 
 CLIENT_ID = '2e6582b4e4109df'
 CLIENT_SECRET = '9a0e29fb2220d772a81a56a0d3a4f9fee9d8b29b'
-IMAGE_PATH = '/home/yash/Ian4chanProject/Images/*.*'
+IMAGE_PATH = 'F:\\RippedWallpapers\\Y2015_W31\\*.*'
 
 USER_AGENT = '4chan /w/ crossposter for /u/Shazambom'
 USERNAME = 'SmallTextReader'
@@ -31,7 +31,8 @@ def upload_to_imgur():
             for image_filename in album:
                 album_images.append(imgur.upload_image(image_filename))
                 print ('uploaded')
-            album_title = thread.rsplit('/', 1)[-1]
+            album_title = thread.rsplit('\\', 1)[-1]
+            print (album_title)
             image_links.append(imgur.create_album(title=album_title, images=album_images).link)
             print ('album created')
             already_done.append(thread)

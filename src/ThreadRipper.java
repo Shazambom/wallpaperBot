@@ -21,11 +21,9 @@ public class ThreadRipper {
     private int total;
     private HashMap<Integer, String> duplicateNames;
     private String filePath;
-    private String dumpFilePath;
 
     public ThreadRipper(String filePath) {
         this.filePath = filePath;
-        this.dumpFilePath = filePath + "Dump\\";
         initDuplicates();
         total = 0;
     }
@@ -212,18 +210,11 @@ public class ThreadRipper {
             for (Map.Entry element: duplicateNames.entrySet()) {
                 out.println(element.getValue());
             }
-            if (!(new File(dumpFilePath).isDirectory())) {
-                Files.createDirectory(new File(dumpFilePath).toPath());
-            }
             System.out.print("[");
             for (File element: toRemove) {
                 out.println(element.getName());
-                if (element.renameTo(new File(dumpFilePath + element.getName()))) {
-                    System.out.print("∎");
-                } else {
-                    Files.delete(element.toPath());
-                    System.out.print("!");
-                }
+                Files.delete(element.toPath());
+                System.out.print("∎");
             }
             System.out.println("]");
             out.close();
