@@ -1,20 +1,30 @@
 import glob       #to get filenames
+import datetime       #to generate weekly folder paths
 import pyimgur    #to upload files to imgur
 import praw       #to post links to reddit/r/slashw
 
 # /media/UNTITLED/Wallpapers/
 
+def assign_directory_by_time():
+    path = 'Y'
+    date = datetime.datetime.now()
+    path = path + date.year
+    path = path + '_W' + date.isocalendar()[1]  #the week of the year
+    return path
+
 CLIENT_ID = '2e6582b4e4109df'
 CLIENT_SECRET = '9a0e29fb2220d772a81a56a0d3a4f9fee9d8b29b'
-JPG_PATH = '/home/yash/Ian4chanProject/Images/*.jpg'
-JPEG_PATH = '/home/yash/Ian4chanProject/Images/*.jpeg'
-PNG_PATH = '/home/yash/Ian4chanProject/Images/*.png'
-APNG_PATH = '/home/yash/Ian4chanProject/Images/*.apng'
-BMP_PATH = '/home/yash/Ian4chanProject/Images/*.bmp'
-TIFF_PATH = '/home/yash/Ian4chanProject/Images/*.tiff'
-TIF_PATH = '/home/yash/Ian4chanProject/Images/*.tif'
-XCF_PATH = '/home/yash/Ian4chanProject/Images/*.xcf'
-PDF_PATH = '/home/yash/Ian4chanProject/Images/*.pdf'
+
+PATH_BASE = '/home/yash/Ian4chanProject/Images/' + assign_directory_by_time()
+JPG_PATH = PATH_BASE + '/*.jpg'
+JPEG_PATH = PATH_BASE + '/*.jpeg'
+PNG_PATH = PATH_BASE + '/*.png'
+APNG_PATH = PATH_BASE + '/*.apng'
+BMP_PATH = PATH_BASE + '/*.bmp'
+TIFF_PATH = PATH_BASE + '/*.tiff'
+TIF_PATH = PATH_BASE + '/*.tif'
+XCF_PATH = PATH_BASE + '/*.xcf'
+PDF_PATH = PATH_BASE + '/*.pdf'
 
 USER_AGENT = '4chan /w/ crossposter for /u/Shazambom'
 USERNAME = 'SmallTextReader'
@@ -25,8 +35,7 @@ SUBREDDIT = 'slashw'
 imgur = pyimgur.Imgur(CLIENT_ID, CLIENT_SECRET)
 image_links = []
 
-def assign_directory_by_time():
-    
+
 
 def upload_to_imgur():
     
