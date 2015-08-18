@@ -8,8 +8,8 @@ import praw       #to post links to reddit/r/slashw
 def assign_directory_by_time():
     path = 'Y'
     date = datetime.datetime.now()
-    path = path + date.year
-    path = path + '_W' + date.isocalendar()[1]  #the week of the year
+    path = path + str(date.year)
+    path = path + '_W' + str(date.isocalendar()[1])  #the week of the year
     return path
 
 CLIENT_ID = '2e6582b4e4109df'
