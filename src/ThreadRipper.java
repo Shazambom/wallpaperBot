@@ -184,15 +184,15 @@ public class ThreadRipper {
             double percentage = folder.size() / 100;
             for (int i = 0; i < folder.size(); i++) {
                 if (!toRemove.contains(folder.get(i))) {
-                    try {
-                        BufferedImage image = ImageIO.read(folder.get(i));
-                        if (image.getHeight() < 720 || image.getWidth() < 1080){
-                            toRemove.add(folder.get(i));
-                        }
-                        image.flush();
-                    } catch (Exception e) {
-                        continue;
-                    }
+//                    try {
+//                        BufferedImage image = ImageIO.read(folder.get(i));
+//                        if (image.getHeight() < 720 || image.getWidth() < 1080){
+//                            toRemove.add(folder.get(i));
+//                        }
+//                        image.flush();
+//                    } catch (Exception e) {
+//                        continue;
+//                    }
                     for (int j = i + 1; j < folder.size(); j++) {
                         if (folder.get(i).isFile() && folder.get(j).isFile()
                                 && FileUtils.contentEquals(folder.get(i), folder.get(j))){
