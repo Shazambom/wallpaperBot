@@ -3,8 +3,12 @@ import com.jaunt.Elements;
 import com.jaunt.JauntException;
 import com.jaunt.UserAgent;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.FileImageInputStream;
+import javax.imageio.stream.ImageInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -12,8 +16,8 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 
@@ -189,15 +193,29 @@ public class ThreadRipper {
 //                        if (image.getHeight() < 720 || image.getWidth() < 1080){
 //                            toRemove.add(folder.get(i));
 //                        }
-//                        image.flush();
 //                    } catch (Exception e) {
 //                        continue;
 //                    }
-                    for (int j = i + 1; j < folder.size(); j++) {
-                        if (folder.get(i).isFile() && folder.get(j).isFile()
-                                && FileUtils.contentEquals(folder.get(i), folder.get(j))){
-                            toRemove.add(folder.get(j));
+                    String suffix = getFileSuffix(folder.get(i).getPath());
+                    if (suffix.equals("jpeg") || suffix.equals("png")
+                            || suffix.equals("jpg") || suffix.equals("apng")
+                            || suffix.equals("bmp") || suffix.equals("tiff")
+                            || suffix.equals("tif") || suffix.equals("xcf")
+                            || suffix.equals("pdf")) {
+                        Dimension fileDim = getImageDim(folder.get(i).getPath(), suffix);
+                        if (fileDim.getHeight() < 720 || fileDim.getWidth() < 1080) {
+                            toRemove.add(folder.get(i));
+                        } else {
+                            for (int j = i + 1; j < folder.size(); j++) {
+                                if (folder.get(i).isFile() && folder.get(j).isFile()
+                                        && FileUtils.contentEquals(folder.get(i), folder.get(j))){
+                                    toRemove.add(folder.get(j));
+                                }
+                            }
                         }
+                    }
+                    if (suffix.equals("webm")) {
+                        toRemove.add(folder.get(i));
                     }
                 }
                 if (i % percentage == 0) {
@@ -267,6 +285,42 @@ public class ThreadRipper {
             }
         }
         return toReturn;
+    }
+
+    private Dimension getImageDim(final String path, String suffix) {
+        Dimension result = null;
+        Iterator<ImageReader> iter = ImageIO.getImageReadersBySuffix(suffix);
+        if (iter.hasNext()) {
+            ImageReader reader = iter.next();
+            try {
+                ImageInputStream stream = new FileImageInputStream(new File(path));
+                reader.setInput(stream);
+                int width = reader.getWidth(reader.getMinIndex());
+                int height = reader.getHeight(reader.getMinIndex());
+                result = new Dimension(width, height);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                reader.dispose();
+            }
+        } else {
+            System.out.println("No reader found for given format: " + suffix);
+        }
+        return result;
+    }
+
+    private String getFileSuffix(final String path) {
+        String result = null;
+        if (path != null) {
+            result = "";
+            if (path.lastIndexOf('.') != -1) {
+                result = path.substring(path.lastIndexOf('.'));
+                if (result.startsWith(".")) {
+                    result = result.substring(1);
+                }
+            }
+        }
+        return result;
     }
 
 }
