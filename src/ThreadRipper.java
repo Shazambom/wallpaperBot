@@ -63,7 +63,6 @@ public class ThreadRipper {
             System.out.println("]");
             System.out.println(success + " unique images successfully downloaded");
 
-
         } catch(JauntException e) {
             e.printStackTrace();
         }
@@ -190,7 +189,7 @@ public class ThreadRipper {
                         if (image.getHeight() < 720 || image.getWidth() < 1080){
                             toRemove.add(folder.get(i));
                         }
-                        image = null;
+                        image.flush();
                     } catch (Exception e) {
                         continue;
                     }
