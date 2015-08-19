@@ -79,7 +79,7 @@ public class ThreadRipper {
                     userAgent.download(links.get(i), new File(filePath + names.get(i)));
                     success++;
                     total++;
-                    System.out.print("∎");
+                    System.out.print("#");
                 } catch (JauntException e) {
                     System.out.println("\nFile: " + (i + 1) + " at the url: " + links.get(i) + " failed to download");
                     success += downloadImages(links.subList(i + 1, links.size()), names.subList(i + 1, names.size()), userAgent, files);
@@ -219,7 +219,7 @@ public class ThreadRipper {
                     }
                 }
                 if (i % percentage == 0) {
-                    System.out.print("∎");
+                    System.out.print("#");
                 }
             }
             System.out.println("]");
@@ -236,7 +236,7 @@ public class ThreadRipper {
             System.out.print("[");
             for (File element: toRemove) {
                 Files.delete(element.toPath());
-                System.out.print("∎");
+                System.out.print("#");
             }
             System.out.println("]");
         } catch (Exception e) {
