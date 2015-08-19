@@ -51,14 +51,14 @@ public class Organizer {
     private void initRipper() {
         int weekNum = date.get(GregorianCalendar.WEEK_OF_YEAR);
         int yearNum = date.get(GregorianCalendar.YEAR);
-        if (!(new File(filePath + "Y" + yearNum + "_" + "W" + weekNum + "/").isDirectory())) {
+        if (!(new File(filePath + "Y" + yearNum + "-" + "W" + weekNum + "/").isDirectory())) {
             try {
-                Files.createDirectory(new File(filePath + "Y" + yearNum + "_" + "W" + weekNum + "/").toPath());
+                Files.createDirectory(new File(filePath + "Y" + yearNum + "-" + "W" + weekNum + "/").toPath());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        ripper = new ThreadRipper(filePath + "Y" + yearNum + "_" + "W" + weekNum + "/");
+        ripper = new ThreadRipper(filePath + "Y" + yearNum + "-" + "W" + weekNum + "/");
     }
 
 }
