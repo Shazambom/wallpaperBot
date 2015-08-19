@@ -3,8 +3,12 @@ import com.jaunt.Elements;
 import com.jaunt.JauntException;
 import com.jaunt.UserAgent;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.FileImageInputStream;
+import javax.imageio.stream.ImageInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -12,8 +16,8 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 
@@ -21,10 +25,11 @@ public class ThreadRipper {
     private int total;
     private HashMap<Integer, String> duplicateNames;
     private String filePath;
+    private File duplicates;
 
     public ThreadRipper(String filePath) {
         this.filePath = filePath;
-        initDuplicates();
+        duplicates = initDuplicates();
         total = 0;
     }
 
@@ -62,7 +67,6 @@ public class ThreadRipper {
             System.out.println("]");
             System.out.println(success + " unique images successfully downloaded");
 
-
         } catch(JauntException e) {
             e.printStackTrace();
         }
@@ -75,7 +79,7 @@ public class ThreadRipper {
                     userAgent.download(links.get(i), new File(filePath + names.get(i)));
                     success++;
                     total++;
-                    System.out.print("∎");
+                    System.out.print("#");
                 } catch (JauntException e) {
                     System.out.println("\nFile: " + (i + 1) + " at the url: " + links.get(i) + " failed to download");
                     success += downloadImages(links.subList(i + 1, links.size()), names.subList(i + 1, names.size()), userAgent, files);
@@ -167,32 +171,55 @@ public class ThreadRipper {
 
     public void cleanUp() {
         ArrayList<File> folder = new ArrayList<File>();
-        for (File element: new File(filePath).listFiles()){
-            folder.add(element);
+        try {
+            PrintWriter out = new PrintWriter(duplicates);
+            for (File element : new File(filePath).listFiles()) {
+                folder.add(element);
+                out.println(element.getName());
+            }
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         ArrayList<File> toRemove = new ArrayList<File>();
         try {
             System.out.print("[");
             double percentage = folder.size() / 100;
             for (int i = 0; i < folder.size(); i++) {
                 if (!toRemove.contains(folder.get(i))) {
-                    try {
-                        BufferedImage image = ImageIO.read(folder.get(i));
-                        if (image.getHeight() < 720 || image.getWidth() < 1080){
+//                    try {
+//                        BufferedImage image = ImageIO.read(folder.get(i));
+//                        if (image.getHeight() < 720 || image.getWidth() < 1080){
+//                            toRemove.add(folder.get(i));
+//                        }
+//                    } catch (Exception e) {
+//                        continue;
+//                    }
+                    String suffix = getFileSuffix(folder.get(i).getPath());
+                    if (suffix.equals("jpeg") || suffix.equals("png")
+                            || suffix.equals("jpg") || suffix.equals("apng")
+                            || suffix.equals("bmp") || suffix.equals("tiff")
+                            || suffix.equals("tif") || suffix.equals("xcf")
+                            || suffix.equals("pdf")) {
+                        Dimension fileDim = getImageDim(folder.get(i).getPath(), suffix);
+                        if (fileDim.getHeight() < 720 || fileDim.getWidth() < 1080) {
                             toRemove.add(folder.get(i));
+                        } else {
+                            for (int j = i + 1; j < folder.size(); j++) {
+                                if (folder.get(i).isFile() && folder.get(j).isFile()
+                                        && FileUtils.contentEquals(folder.get(i), folder.get(j))){
+                                    toRemove.add(folder.get(j));
+                                }
+                            }
                         }
-                    } catch (Exception e) {
-                        continue;
                     }
-                    for (int j = i + 1; j < folder.size(); j++) {
-                        if (folder.get(i).isFile() && folder.get(j).isFile()
-                                && FileUtils.contentEquals(folder.get(i), folder.get(j))){
-                            toRemove.add(folder.get(j));
-                        }
+                    if (suffix.equals("webm")) {
+                        toRemove.add(folder.get(i));
                     }
                 }
                 if (i % percentage == 0) {
-                    System.out.print("∎");
+                    System.out.print("#");
                 }
             }
             System.out.println("]");
@@ -206,26 +233,20 @@ public class ThreadRipper {
     }
     private void resolveDuplicates(ArrayList<File> toRemove) {
         try {
-            PrintWriter out = new PrintWriter(filePath + "duplicates.txt");
-            for (Map.Entry element: duplicateNames.entrySet()) {
-                out.println(element.getValue());
-            }
             System.out.print("[");
             for (File element: toRemove) {
-                out.println(element.getName());
                 Files.delete(element.toPath());
-                System.out.print("∎");
+                System.out.print("#");
             }
             System.out.println("]");
-            out.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    private void initDuplicates() {
+    private File initDuplicates() {
         try {
             duplicateNames = new HashMap<Integer, String>();
-            File duplicates = new File(filePath + "duplicates.txt");
+            File duplicates = new File(new File(filePath).getParentFile().getPath() + "/duplicates.txt");
             FileReader fileReader = new FileReader(duplicates);
             BufferedReader in = new BufferedReader(fileReader);
 
@@ -235,21 +256,20 @@ public class ThreadRipper {
             }
             in.close();
             fileReader.close();
+            return duplicates;
 
         } catch (Exception e) {
             try {
-                ArrayList<String> dupNames = traverseFiles(new File(filePath).getParentFile());
-                PrintWriter out = new PrintWriter(new File(filePath + "duplicates.txt"));
-                for (String element: dupNames) {
-                    out.println(element);
-                    duplicateNames.put(element.hashCode(), element);
-                }
+                PrintWriter out = new PrintWriter(new File(new File(filePath).getParentFile().getPath() + "/duplicates.txt"));
+                out.print("\n");
                 out.close();
+                return new File(new File(filePath).getParentFile().getPath() + "/duplicates.txt");
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
 
         }
+        return new File(new File(filePath).getParentFile().getPath() + "/duplicates.txt");
     }
 
     private String parseThreadName(String threadName) {
@@ -267,21 +287,40 @@ public class ThreadRipper {
         return toReturn;
     }
 
-    private ArrayList<String> traverseFiles(File file) {
-        ArrayList<String> toReturn = new ArrayList<String>();
-        if (file.listFiles() != null) {
-            File[] files = file.listFiles();
-            if (files.length > 0) {
-                for (File element : files) {
-                    if (element.isDirectory()) {
-                        toReturn.addAll(traverseFiles(element));
-                    } else {
-                        toReturn.add(element.getName());
-                    }
+    private Dimension getImageDim(final String path, String suffix) {
+        Dimension result = null;
+        Iterator<ImageReader> iter = ImageIO.getImageReadersBySuffix(suffix);
+        if (iter.hasNext()) {
+            ImageReader reader = iter.next();
+            try {
+                ImageInputStream stream = new FileImageInputStream(new File(path));
+                reader.setInput(stream);
+                int width = reader.getWidth(reader.getMinIndex());
+                int height = reader.getHeight(reader.getMinIndex());
+                result = new Dimension(width, height);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                reader.dispose();
+            }
+        } else {
+            System.out.println("No reader found for given format: " + suffix);
+        }
+        return result;
+    }
+
+    private String getFileSuffix(final String path) {
+        String result = null;
+        if (path != null) {
+            result = "";
+            if (path.lastIndexOf('.') != -1) {
+                result = path.substring(path.lastIndexOf('.'));
+                if (result.startsWith(".")) {
+                    result = result.substring(1);
                 }
             }
         }
-        return toReturn;
+        return result;
     }
 
 }
