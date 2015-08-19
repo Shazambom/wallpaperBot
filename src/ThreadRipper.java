@@ -190,6 +190,7 @@ public class ThreadRipper {
                         if (image.getHeight() < 720 || image.getWidth() < 1080){
                             toRemove.add(folder.get(i));
                         }
+                        image = null;
                     } catch (Exception e) {
                         continue;
                     }
