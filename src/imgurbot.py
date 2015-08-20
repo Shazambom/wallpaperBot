@@ -15,7 +15,7 @@ def assign_directory_by_time():
 CLIENT_ID = '2e6582b4e4109df'
 CLIENT_SECRET = '9a0e29fb2220d772a81a56a0d3a4f9fee9d8b29b'
 
-PATH_BASE = '/home/yash/Ian4chanProject/Images/' + assign_directory_by_time()
+PATH_BASE = '/media/UNTITLED/Wallpapers/' + assign_directory_by_time()
 JPG_PATH = PATH_BASE + '/*.jpg'
 JPEG_PATH = PATH_BASE + '/*.jpeg'
 PNG_PATH = PATH_BASE + '/*.png'
