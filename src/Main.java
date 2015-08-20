@@ -1,5 +1,4 @@
-import java.util.Timer;
-import java.util.TimerTask;
+
 
 /**
  * Created by Shazambom on 7/22/2015.
@@ -9,5 +8,12 @@ public class Main {
 //        Organizer organizer = new Organizer("http://boards.4chan.org/w/", "/Users/ian/Desktop/RippedWallpapers/");
         Organizer organizer = new Organizer("http://boards.4chan.org/w/", "/media/UNTITLED/Wallpapers/");
         organizer.runRip();
+        Runtime rt = Runtime.getRuntime();
+        try {
+            rt.exec("python imgurbot.py");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
