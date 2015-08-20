@@ -10,7 +10,7 @@ public class Main {
         organizer.runRip();
         Runtime rt = Runtime.getRuntime();
         try {
-            rt.exec("python imgurbot.py");
+            rt.exec("python /home/pi/GitHub/wallpaperBot/src/imgurbot.py");
         } catch (Exception e) {
             e.printStackTrace();
         }
