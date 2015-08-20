@@ -23,7 +23,7 @@ PASSWORD = '9AyEXPga2JS8'
 SUBREDDIT = 'slashw'
 
 album_links = []
-PATH_BASE = '/home/yash/Ian4chanProject/Images/' + assign_directory_by_time()
+PATH_BASE = '/media/UNTITLED/Wallpapers/' + assign_directory_by_time()
 
 def consolidate_to_albums():
     filenames = glob.glob(PATH_BASE + '/*.txt')
