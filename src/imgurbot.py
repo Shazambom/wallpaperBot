@@ -26,11 +26,6 @@ TIF_PATH = PATH_BASE + '/*.tif'
 XCF_PATH = PATH_BASE + '/*.xcf'
 PDF_PATH = PATH_BASE + '/*.pdf'
 
-USER_AGENT = '4chan /w/ crossposter for /u/Shazambom'
-USERNAME = 'SmallTextReader'
-PASSWORD = '9AyEXPga2JS8'
-SUBREDDIT = 'slashw'
-
 
 imgur = pyimgur.Imgur(CLIENT_ID, CLIENT_SECRET)
 
@@ -88,22 +83,10 @@ def upload_to_imgur():
                     print ('uploaded')
             album_image_file.close()
             album2_image_file.close()
-            #image_links.append(imgur.create_album(title=album_title, images=album_images).link)
-            #print ('album created')
-            #if (len(album) > 149):
-                #image_links.append(imgur.create_album(title=album_title, images=album2_images).link)
-                #print ('album2 created')
             already_done.append(thread)
 
 
-def post_to_reddit():
-    r = praw.Reddit(user_agent=USER_AGENT)
-    r.login(USERNAME, PASSWORD, disable_warning=True)
-    for image_link in image_links:
-        album = imgur.get_at_url(image_link)
-        r.submit(SUBREDDIT, album.title, url=album.link)
-        print ('post submitted')
+
 
 
 upload_to_imgur()
-#post_to_reddit()
