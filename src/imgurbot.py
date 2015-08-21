@@ -2,6 +2,7 @@ import glob       #to get filenames
 import datetime   #to generate weekly folder paths
 import pyimgur    #to upload files to imgur
 import praw       #to post links to reddit/r/slashw
+import os
 
 # /media/UNTITLED/Wallpapers/
 
@@ -74,6 +75,8 @@ def upload_to_imgur():
                 album_image_file.write(current_image.link)
                 album_image_file.write('\n')
                 print ('uploaded')
+                os.remove(image_filename)
+                
             if (len(album) > 149):
                 for image_filename in album2:
                     current_image = imgur.upload_image(image_filename)
@@ -81,6 +84,7 @@ def upload_to_imgur():
                     album2_image_file.write(current_image.link)
                     album2_image_file.write('\n')
                     print ('uploaded')
+                    os.remove(image_filename)
             album_image_file.close()
             album2_image_file.close()
             already_done.append(thread)
