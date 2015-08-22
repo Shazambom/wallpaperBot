@@ -53,7 +53,7 @@ def post_to_reddit():
     r = praw.Reddit(user_agent=USER_AGENT)
     r.login(USERNAME, PASSWORD, disable_warning=True)
     for album_link in album_links:
-        album = imgur.get_at_url(album_link)
+        album = imgur.get_at_url(album_link.link)
         r.submit(SUBREDDIT, album.title, url=album.link)
         print ('post submitted')
 
