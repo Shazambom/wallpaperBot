@@ -1,5 +1,5 @@
 import glob       #to get filenames
-import datetime       #to generate weekly folder paths
+import datetime   #to generate weekly folder paths
 import pyimgur    #to upload files to imgur
 import praw       #to post links to reddit/r/slashw
 
@@ -49,6 +49,8 @@ def upload_to_imgur():
     filenames.extend(glob.glob(TIFF_PATH))
     filenames.extend(glob.glob(PDF_PATH))
     filenames.extend(glob.glob(XCF_PATH))
+
+    image_link_files = []
     
     threads = []
     already_done = []
@@ -57,6 +59,7 @@ def upload_to_imgur():
         if (thread not in already_done):
             album = []
             album2 = []
+            album_title = thread.rsplit('/', 1)[-1]  #removes everything before last '/'
             for filename2 in filenames:
                 thread2 = filename2.split('_', 1)[0]
                 if (thread == thread2):
@@ -64,21 +67,30 @@ def upload_to_imgur():
                         album2.append(filename2)
                     else:
                         album.append(filename2)
+                        
             album_images = []
             album2_images = []
+            album_image_file = open(thread + '.txt', 'a')
+            album2_image_file = open(thread + str(2) + '.txt', 'a')
+            
             for image_filename in album:
-                album_images.append(imgur.upload_image(image_filename))
+                current_image = imgur.upload_image(image_filename)
+                album_images.append(current_image)
+                album_image_file.write(current_image.link)
+                album_image_file.write('\n')
                 print ('uploaded')
             if (album.length > 149):
                 for image_filename in album2:
-                    album2_images.append(imgur.upload_image(image_filename))
+                    current_image = imgur.upload_image(image_filename)
+                    album2_images.append(current_image)
+                    album2_image_file.write(current_image.link)
+                    album2_image_file.write('\n')
                     print ('uploaded')
-            album_title = thread.rsplit('/', 1)[-1]  #removes everything before last '/'
-            image_links.append(imgur.create_album(title=album_title, images=album_images).link)
-            print ('album created')
-            if (album.length > 149):
-                image_links.append(imgur.create_album(title=album_title, images=album2_images).link)
-                print ('album2 created')
+            #image_links.append(imgur.create_album(title=album_title, images=album_images).link)
+            #print ('album created')
+            #if (album.length > 149):
+                #image_links.append(imgur.create_album(title=album_title, images=album2_images).link)
+                #print ('album2 created')
             already_done.append(thread)
 
 
@@ -92,4 +104,4 @@ def post_to_reddit():
 
 
 upload_to_imgur()
-post_to_reddit()
+#post_to_reddit()
