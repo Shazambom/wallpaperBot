@@ -9,7 +9,7 @@ def assign_directory_by_time():
     path = 'Y'
     date = datetime.datetime.now()
     path = path + str(date.year)
-    path = path + '_W' + str(date.isocalendar()[1])  #the week of the year
+    path = path + '-W' + str(date.isocalendar()[1])  #the week of the year
     return path
 
 CLIENT_ID = '2e6582b4e4109df'
@@ -33,12 +33,11 @@ SUBREDDIT = 'slashw'
 
 
 imgur = pyimgur.Imgur(CLIENT_ID, CLIENT_SECRET)
-image_links = []
 
 
 
 def upload_to_imgur():
-    
+
     filenames = []
     filenames.extend(glob.glob(JPG_PATH))
     filenames.extend(glob.glob(JPEG_PATH))
@@ -49,6 +48,7 @@ def upload_to_imgur():
     filenames.extend(glob.glob(TIFF_PATH))
     filenames.extend(glob.glob(PDF_PATH))
     filenames.extend(glob.glob(XCF_PATH))
+
 
     image_link_files = []
     
@@ -63,7 +63,7 @@ def upload_to_imgur():
             for filename2 in filenames:
                 thread2 = filename2.split('_', 1)[0]
                 if (thread == thread2):
-                    if (album.length > 149):
+                    if (len(album) > 149):
                         album2.append(filename2)
                     else:
                         album.append(filename2)
@@ -79,16 +79,18 @@ def upload_to_imgur():
                 album_image_file.write(current_image.link)
                 album_image_file.write('\n')
                 print ('uploaded')
-            if (album.length > 149):
+            if (len(album) > 149):
                 for image_filename in album2:
                     current_image = imgur.upload_image(image_filename)
                     album2_images.append(current_image)
                     album2_image_file.write(current_image.link)
                     album2_image_file.write('\n')
                     print ('uploaded')
+            album_image_file.close()
+            album2_image_file.close()
             #image_links.append(imgur.create_album(title=album_title, images=album_images).link)
             #print ('album created')
-            #if (album.length > 149):
+            #if (len(album) > 149):
                 #image_links.append(imgur.create_album(title=album_title, images=album2_images).link)
                 #print ('album2 created')
             already_done.append(thread)
