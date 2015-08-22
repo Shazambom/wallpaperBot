@@ -213,8 +213,7 @@ public class ThreadRipper {
                                 }
                             }
                         }
-                    }
-                    if (suffix.equals("webm")) {
+                    } else if (suffix.equals("webm")) {
                         toRemove.add(folder.get(i));
                     }
                 }
