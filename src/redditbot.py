@@ -37,7 +37,7 @@ def consolidate_to_albums():
         file = open(filename, 'r')
         
         for line in file:
-            images.append(imgur.get_at_url(line.link))
+            images.append(imgur.get_at_url(line))
 
         title = filename.rsplit('/', 1)[1][:-4]
         album_links.append(imgur.create_album(title=title, images=images))
