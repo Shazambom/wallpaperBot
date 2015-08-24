@@ -11,15 +11,19 @@ def assign_directory_by_time():
     path = path + '-W' + str(date.isocalendar()[1] - 1)  #the week of the year
     return path
 
-CLIENT_ID = '2e6582b4e4109df'
-CLIENT_SECRET = '9a0e29fb2220d772a81a56a0d3a4f9fee9d8b29b'
+PATH_BASE = '/media/UNTITLED/Wallpapers/' + assign_directory_by_time()
+
+config = open('/home/pi/Github/config.txt', 'r')
+
+CLIENT_ID = config.readline()
+CLIENT_SECRET = config.readline()
 
 imgur = pyimgur.Imgur(CLIENT_ID, CLIENT_SECRET)
 
 
 USER_AGENT = '4chan /w/ crossposter for /u/Shazambom'
-USERNAME = 'SmallTextReader'
-PASSWORD = '9AyEXPga2JS8'
+USERNAME = config.readline()
+PASSWORD = config.readline()
 SUBREDDIT = 'slashw'
 
 PATH_BASE = '/media/UNTITLED/Wallpapers/' + assign_directory_by_time()
