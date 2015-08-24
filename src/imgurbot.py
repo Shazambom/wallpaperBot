@@ -13,7 +13,7 @@ def assign_directory_by_time():
     path = path + '-W' + str(date.isocalendar()[1])  #the week of the year
     return path
 
-config = open('config.txt', 'r')
+config = open('/home/pi/GitHub/wallpaperBot/config.txt', 'r')
 
 CLIENT_ID = config.readline()
 CLIENT_SECRET = config.readline()
