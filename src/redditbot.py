@@ -57,6 +57,6 @@ def post_to_reddit():
         r.submit(SUBREDDIT, album.title, url=album.link)
         print ('post submitted')
 
-    
+print(assign_directory_by_time())
 consolidate_to_albums()
 post_to_reddit()
