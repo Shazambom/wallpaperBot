@@ -52,7 +52,7 @@ def consolidate_to_albums():
         print ('post submitted')
         
         file.close()
-            
+        os.remove(filename)    
         
 def is_empty(filename):
     return os.stat(filename).st_size==0
