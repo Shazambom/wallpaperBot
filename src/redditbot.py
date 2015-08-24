@@ -13,7 +13,7 @@ def assign_directory_by_time():
 
 PATH_BASE = '/media/UNTITLED/Wallpapers/' + assign_directory_by_time()
 
-config = open('/home/pi/Github/config.txt', 'r')
+config = open('~/Github/config.txt', 'r')
 
 CLIENT_ID = config.readline()
 CLIENT_SECRET = config.readline()
