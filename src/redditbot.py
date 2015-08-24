@@ -8,7 +8,7 @@ def assign_directory_by_time():
     path = 'Y'
     date = datetime.datetime.now()
     path = path + str(date.year)
-    path = path + '-W' + str(date.isocalendar()[1] + 1)  #the week of the year
+    path = path + '-W' + str(date.isocalendar()[1])  #the week of the year
     return path
 
 CLIENT_ID = '2e6582b4e4109df'
