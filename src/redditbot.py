@@ -58,5 +58,5 @@ def post_to_reddit():
         print ('post submitted')
 
 print(assign_directory_by_time())
-consolidate_to_albums()
-post_to_reddit()
+#consolidate_to_albums()
+#post_to_reddit()
