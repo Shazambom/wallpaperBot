@@ -43,3 +43,7 @@ Temporary Items
 .apdisk
 
 *.xml
+
+#Client ID and Secrets
+oauth.ini
+config.txt
