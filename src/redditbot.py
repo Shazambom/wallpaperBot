@@ -2,6 +2,7 @@ import glob       #to get filenames
 import datetime   #to check in weekly folder paths
 import pyimgur    #to consolidate images to albums in imgur
 import praw       #to post links to reddit/r/slashw
+import OAuth2Util
 import os         #to check for empty files
 
 def assign_directory_by_time():
@@ -22,8 +23,6 @@ imgur = pyimgur.Imgur(CLIENT_ID, CLIENT_SECRET)
 
 
 USER_AGENT = '4chan /w/ crossposter for /u/Shazambom'
-USERNAME = config.readline()
-PASSWORD = config.readline()
 SUBREDDIT = 'slashw'
 
 PATH_BASE = '/media/UNTITLED/Wallpapers/' + assign_directory_by_time()
@@ -32,7 +31,8 @@ def consolidate_to_albums():
     filenames = glob.glob(PATH_BASE + '/*.txt')
     
     r = praw.Reddit(user_agent=USER_AGENT)
-    r.login(USERNAME, PASSWORD, disable_warning=True)
+    o = OAuth2Util.OAuth2Util(r, print_log=False)
+    o.refresh(force=True)
     
     for filename in filenames:
         images = []
