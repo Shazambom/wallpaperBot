@@ -16,6 +16,8 @@ def assign_directory_by_time():
 CLIENT_ID = '2e6582b4e4109df'
 CLIENT_SECRET = '9a0e29fb2220d772a81a56a0d3a4f9fee9d8b29b'
 
+UPLOAD_LIMIT = 1000  #imgur limits daily uploads
+
 PATH_BASE = '/media/UNTITLED/Wallpapers/' + assign_directory_by_time()
 JPG_PATH = PATH_BASE + '/*.jpg'
 JPEG_PATH = PATH_BASE + '/*.jpeg'
@@ -27,12 +29,12 @@ TIF_PATH = PATH_BASE + '/*.tif'
 XCF_PATH = PATH_BASE + '/*.xcf'
 PDF_PATH = PATH_BASE + '/*.pdf'
 
-
 imgur = pyimgur.Imgur(CLIENT_ID, CLIENT_SECRET)
 
 
-
 def upload_to_imgur():
+    
+    uploaded_count = 0
 
     filenames = []
     filenames.extend(glob.glob(JPG_PATH))
@@ -70,21 +72,25 @@ def upload_to_imgur():
             album2_image_file = open(thread + str(2) + '.txt', 'a')
             
             for image_filename in album:
-                current_image = imgur.upload_image(image_filename)
-                album_images.append(current_image)
-                album_image_file.write(current_image.link)
-                album_image_file.write('\n')
-                print ('uploaded')
-                os.remove(image_filename)
+                if (uploaded_count < UPLOAD_LIMIT):
+                    current_image = imgur.upload_image(image_filename)
+                    album_images.append(current_image)
+                    album_image_file.write(current_image.link)
+                    album_image_file.write('\n')
+                    print ('uploaded')
+                    uploaded_count += 1
+                    os.remove(image_filename)
                 
             if (len(album) > 149):
                 for image_filename in album2:
-                    current_image = imgur.upload_image(image_filename)
-                    album2_images.append(current_image)
-                    album2_image_file.write(current_image.link)
-                    album2_image_file.write('\n')
-                    print ('uploaded')
-                    os.remove(image_filename)
+                    if (uploaded_count < UPLOAD_LIMIT):
+                        current_image = imgur.upload_image(image_filename)
+                        album2_images.append(current_image)
+                        album2_image_file.write(current_image.link)
+                        album2_image_file.write('\n')
+                        print ('uploaded')
+                        uploaded_count += 1
+                        os.remove(image_filename)
             album_image_file.close()
             album2_image_file.close()
             already_done.append(thread)
