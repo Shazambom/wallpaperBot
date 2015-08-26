@@ -31,9 +31,10 @@ def consolidate_to_albums():
     filenames = glob.glob(PATH_BASE + '/*.txt')
     
     r = praw.Reddit(user_agent=USER_AGENT)
-    o = OAuth2Util.OAuth2Util(r, print_log=False)
-    o.refresh(force=True)
-    
+    print('I made it to reddit')
+    o = OAuth2Util.OAuth2Util(r)
+    print('I am authorized by reddit')
+    o.refresh(force=True)   
     for filename in filenames:
         images = []
         if is_empty(filename):
