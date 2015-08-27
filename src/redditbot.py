@@ -4,6 +4,7 @@ import pyimgur    #to consolidate images to albums in imgur
 import praw       #to post links to reddit/r/slashw
 import OAuth2Util #OAuth2 for reddit
 import os         #to check for empty files
+import requests   #to see how many imgur requests remain
 
 def assign_directory_by_time():
     path = 'Y'
@@ -49,6 +50,10 @@ def consolidate_to_albums():
         title = filename.rsplit('/', 1)[1][:-4]
         album = imgur.create_album(title=title, images=images)
         print('album made at ' + album.link)
+
+        imgur_requests = requests.get("https://api.imgur.com/3/credits")
+        print (imgur_requests.content)
+        
         r.submit(SUBREDDIT, album.title, url=album.link)
         print ('post submitted')
         

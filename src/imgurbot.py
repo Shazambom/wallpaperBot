@@ -3,6 +3,7 @@ import datetime   #to generate weekly folder paths
 import pyimgur    #to upload files to imgur
 import praw       #to post links to reddit/r/slashw
 import os
+import requests
 
 # /media/UNTITLED/Wallpapers/
 
@@ -80,6 +81,7 @@ def upload_to_imgur():
                     album_image_file.write(current_image.link)
                     album_image_file.write('\n')
                     print ('uploaded')
+                    print (requests.get("https://api.imgur.com/3/credits").content)
                     uploaded_count += 1
                     os.remove(image_filename)
                 
@@ -91,6 +93,7 @@ def upload_to_imgur():
                         album2_image_file.write(current_image.link)
                         album2_image_file.write('\n')
                         print ('uploaded')
+                        print (requests.get("https://api.imgur.com/3/credits").content)
                         uploaded_count += 1
                         os.remove(image_filename)
             album_image_file.close()
