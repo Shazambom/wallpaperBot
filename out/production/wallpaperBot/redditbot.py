@@ -8,7 +8,7 @@ def assign_directory_by_time():
     path = 'Y'
     date = datetime.datetime.now()
     path = path + str(date.year)
-    path = path + '-W' + str(date.isocalendar()[1])  #the week of the year
+    path = path + '-W' + str(date.isocalendar()[1] - 1)  #the week of the year
     return path
 
 CLIENT_ID = '2e6582b4e4109df'
@@ -22,14 +22,16 @@ USERNAME = 'SmallTextReader'
 PASSWORD = '9AyEXPga2JS8'
 SUBREDDIT = 'slashw'
 
-album_links = []
 PATH_BASE = '/media/UNTITLED/Wallpapers/' + assign_directory_by_time()
 
 def consolidate_to_albums():
     filenames = glob.glob(PATH_BASE + '/*.txt')
+    
+    r = praw.Reddit(user_agent=USER_AGENT)
+    r.login(USERNAME, PASSWORD, disable_warning=True)
+    
     for filename in filenames:
         images = []
-        
         if is_empty(filename):
            os.remove(filename)
            continue
@@ -40,8 +42,10 @@ def consolidate_to_albums():
             images.append(imgur.get_at_url(line))
 
         title = filename.rsplit('/', 1)[1][:-4]
-        album_links.append(imgur.create_album(title=title, images=images))
-        print('album made at ' + album_links[-1].link)
+        album = imgur.create_album(title=title, images=images)
+        print('album made at ' + album.link)
+        r.submit(SUBREDDIT, album.title, url=album.link)
+        print ('post submitted')
         
         file.close()
             
@@ -49,14 +53,5 @@ def consolidate_to_albums():
 def is_empty(filename):
     return os.stat(filename).st_size==0
 
-def post_to_reddit():
-    r = praw.Reddit(user_agent=USER_AGENT)
-    r.login(USERNAME, PASSWORD, disable_warning=True)
-    for album_link in album_links:
-        album = imgur.get_at_url(album_link)
-        r.submit(SUBREDDIT, album.title, url=album.link)
-        print ('post submitted')
-
-    
+print(assign_directory_by_time())
 consolidate_to_albums()
-post_to_reddit()

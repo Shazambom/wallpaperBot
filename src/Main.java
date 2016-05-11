@@ -8,12 +8,12 @@ public class Main {
 //        Organizer organizer = new Organizer("http://boards.4chan.org/w/", "/Users/ian/Desktop/RippedWallpapers/");
         Organizer organizer = new Organizer("http://boards.4chan.org/w/", "/media/UNTITLED/Wallpapers/");
         organizer.runRip();
-        Runtime rt = Runtime.getRuntime();
-        try {
-            rt.exec("python /home/pi/GitHub/wallpaperBot/src/imgurbot.py");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        Runtime rt = Runtime.getRuntime();
+//        try {
+//            rt.exec("python /home/pi/GitHub/wallpaperBot/src/imgurbot.py");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
     }
 }
