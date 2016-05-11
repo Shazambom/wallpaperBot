@@ -1,0 +1,13 @@
+{
+  "fullname": "Luke Lowe",
+  "father":  {
+    "fullName": "Stan Rowe",
+    "father": {  "fullName": "Mike Lowe"  },
+    "mother": {   "fullName": "Janice Lowe" }
+  },
+  "mother": {
+    "fullName": "Emily Rowe",
+    "father": {  "fullName": "Greg Baker" },
+    "mother": {   "fullName": "Linda Baker" }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Scary Movies",
+  "movies": [
+    { title : "Dawn of the Zombies" },
+    { title : "Night of the Undead" },
+    { title : "Awakening of the Zombies"}
+  ]
+}

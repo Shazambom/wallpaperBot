@@ -1,0 +1,17 @@
+{
+  "name": "Return of the Flesh-eating Zombies",
+  "producer":  {
+    "lastName": "Richards",
+    "title": "Mr", 
+    "email": null
+  },
+  "assistant producer": {
+    "lastName": "Kosser",
+    "title": "Mr",
+    "email": "kosser@paramount.com"
+  },
+  "director": {
+    "lastName": "Ryan",
+    "title": "Mrs" 
+  } 
+}
