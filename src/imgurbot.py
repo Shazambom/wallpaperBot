@@ -36,7 +36,7 @@ imgur = pyimgur.Imgur(CLIENT_ID, CLIENT_SECRET)
 
 
 def upload_to_imgur():
-    
+
     uploaded_count = 0
 
     filenames = []
@@ -52,7 +52,7 @@ def upload_to_imgur():
 
 
     image_link_files = []
-    
+
     threads = []
     already_done = []
     for filename in filenames:
@@ -68,12 +68,12 @@ def upload_to_imgur():
                         album2.append(filename2)
                     else:
                         album.append(filename2)
-                        
+
             album_images = []
             album2_images = []
             album_image_file = open(thread + '.txt', 'a')
             album2_image_file = open(thread + str(2) + '.txt', 'a')
-            
+
             for image_filename in album:
                 if (uploaded_count < UPLOAD_LIMIT):
                     current_image = imgur.upload_image(image_filename)
@@ -84,7 +84,7 @@ def upload_to_imgur():
                     print (requests.get("https://api.imgur.com/3/credits").content)
                     uploaded_count += 1
                     os.remove(image_filename)
-                
+
             if (len(album) > 149):
                 for image_filename in album2:
                     if (uploaded_count < UPLOAD_LIMIT):
