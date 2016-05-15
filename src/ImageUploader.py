@@ -36,3 +36,9 @@ class Imgur(ImageUploader):
 
 class Picasa(ImageUploader):
     pass
+    #How to create a new album (from google example):
+    # album = gd_client.InsertAlbum(title='New album', summary='This is an album')
+    #How to upload a photo (from google example):
+    # photo = gd_client.InsertPhotoSimple(album_url, 'New Photo', 
+    #     'Uploaded using the API', filename, content_type='image/jpeg')
+
