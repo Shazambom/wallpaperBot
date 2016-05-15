@@ -36,8 +36,19 @@ class Imgur(ImageUploader):
 
 class Picasa(ImageUploader):
     pass
+    #How to create a client (from google example):
+    # gd_client = gdata.photos.service.PhotosService()
+
+    # Instead of using these lines I think we can just use Oauth2.0 to get in but I believe this will work
+    # gd_client.email = '=change='     
+    # gd_client.password = '=change='  
+
+    # gd_client.source = 'api-sample-google-com'
+    # gd_client.ProgrammaticLogin()
+
     #How to create a new album (from google example):
     # album = gd_client.InsertAlbum(title='New album', summary='This is an album')
+
     #How to upload a photo (from google example):
     # photo = gd_client.InsertPhotoSimple(album_url, 'New Photo', 
     #     'Uploaded using the API', filename, content_type='image/jpeg')
