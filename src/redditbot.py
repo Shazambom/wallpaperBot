@@ -30,12 +30,7 @@ SUBREDDIT = 'slashw'
 #path for the folder for this week in the raspberry pi
 PATH_BASE = '/media/UNTITLED/Wallpapers/' + assign_directory_by_time()
 
-config = open(PATH_TO_CONFIG, 'r')
-#for accessing the imgur api
-CLIENT_ID = config.readline()
-CLIENT_SECRET = config.readline()
-config.close()
-imgur = pyimgur.Imgur(CLIENT_ID, CLIENT_SECRET)
+image_uploader = Imgur()
 
 
 def consolidate_to_albums():
@@ -58,7 +53,7 @@ def consolidate_to_albums():
             images.append(imgur.get_at_url(url))
 
         title = filename.rsplit('/', 1)[1][:-4]
-        album = imgur.create_album(title=title, images=images)
+        album = imgur.upload_album(title=title, images=images)
         print('album made at ' + album.link)
 
         r.submit(SUBREDDIT, album.title, url=album.link)
