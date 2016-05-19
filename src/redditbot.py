@@ -1,11 +1,8 @@
 import glob       #to get filenames
-import datetime   #to check in weekly folder paths
-import pyimgur    #to consolidate images to albums in imgur
 import praw       #to post links to reddit/r/slashw
 import OAuth2Util #OAuth2 for reddit
 import os         #to check for empty files
-import requests   #to see how many imgur requests remain
-import imgurbot
+import uploadbot
 
 #required by reddit when using a bot
 USER_AGENT = '4chan /w/ crossposter for /u/Shazambom'
@@ -45,6 +42,3 @@ def consolidate_to_albums():
 
 def is_empty(filename):
     return os.stat(filename).st_size==0
-
-print(assign_directory_by_time())
-consolidate_to_albums()

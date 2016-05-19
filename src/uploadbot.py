@@ -11,20 +11,23 @@ def assign_directory_by_time():
     return path
 
 
-image_uploader = Imgur()
+image_uploader = ImageUploader.Imgur()
 
-PATH_BASE = '/media/UNTITLED/Wallpapers/' + assign_directory_by_time() + '/'
-JPG_PATH = PATH_BASE + '*.jpg'
-JPEG_PATH = PATH_BASE + '*.jpeg'
-PNG_PATH = PATH_BASE + '*.png'
-APNG_PATH = PATH_BASE + '*.apng'
-BMP_PATH = PATH_BASE + '*.bmp'
-TIFF_PATH = PATH_BASE + '*.tiff'
-TIF_PATH = PATH_BASE + '*.tif'
-XCF_PATH = PATH_BASE + '*.xcf'
-PDF_PATH = PATH_BASE + '*.pdf'
+# PATH_BASE = '/media/UNTITLED/Wallpapers/'
+PATH_BASE = '/home/yash/code/Ian4chanProject/Images/'
+PATH_BASE += assign_directory_by_time() + '/'
 
-def get_image_filenamess_in_directory():
+def get_image_filenamess_in_directory(path_base):
+    JPG_PATH = path_base + '*.jpg'
+    JPEG_PATH = path_base + '*.jpeg'
+    PNG_PATH = path_base + '*.png'
+    APNG_PATH = path_base + '*.apng'
+    BMP_PATH = path_base + '*.bmp'
+    TIFF_PATH = path_base + '*.tiff'
+    TIF_PATH = path_base + '*.tif'
+    XCF_PATH = path_base + '*.xcf'
+    PDF_PATH = path_base + '*.pdf'
+
     filenames = []
     filenames.extend(glob.glob(JPG_PATH))
     filenames.extend(glob.glob(JPEG_PATH))
@@ -49,11 +52,8 @@ def upload():
 
     uploaded_count = 0
 
-    filenames = get_image_filenames_in_directory()
+    filenames = get_image_filenamess_in_directory(PATH_BASE)
 
-    image_link_files = []
-
-    threads = []
     already_done = []
     for filename in filenames:
         thread = filename.split('_', 1)[0]  #returns everything before the first encountered underscore
@@ -83,21 +83,17 @@ def upload():
             album2_image_file = open(thread + str(2) + '.txt', 'a')
 
             for image_filename in album:
-                if (uploaded_count < UPLOAD_LIMIT):
+                if (uploaded_count < ImageUploader.UPLOAD_LIMIT):
                     upload_and_write_link(image_uploader, image_filename, album_image_file)
                     uploaded_count += 1
 
 
             if (len(album) > 149):
                 for image_filename in album2:
-                    if (uploaded_count < UPLOAD_LIMIT):
+                    if (uploaded_count < ImageUploader.UPLOAD_LIMIT):
                         upload_and_write_link(image_uploader, image_filename, album2_image_file)
                         uploaded_count += 1
 
             album_image_file.close()
             album2_image_file.close()
             already_done.append(thread)
-
-
-
-upload()

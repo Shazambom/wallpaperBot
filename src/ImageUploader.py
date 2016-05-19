@@ -1,9 +1,9 @@
-import pyimgur    #to upload files to imgur
-import gdata.photos.service
+import pyimgur
+import gdata.gauth
 
 # PATH_TO_CONFIG = '/home/pi/GitHub/wallpaperBot/config.txt'
-PATH_TO_CONFIG = '/home/yash/code/Ian4chanProject/wallpaperBot/src/config.txt'
-DEFAULT_TITLE = "/R/SLASHW"
+PATH_TO_CONFIG = '/home/yash/PycharmProjects/wallpaperBot/config.txt'
+DEFAULT_ALBUM_TITLE = "/R/SLASHW"
 UPLOAD_LIMIT = 1000 # don't upload more that a thousand images in a day
 
 config = open(PATH_TO_CONFIG, 'r')
@@ -14,34 +14,40 @@ config.close()
 
 class ImageUploader:
     """
-    Interface for using different apis to upload images to the internet
+    Interface for using different api's to upload images to the internet
     """
 
-    def upload_image(filename):
+    def upload_image(self, filename):
         pass
 
-    def upload_album(title=DEFAULT_TITLE, image_list=[]):
+    def upload_album(self, title=DEFAULT_ALBUM_TITLE, image_list=[]):
         pass
 
-    def get_image_at(url):
+    def get_image_at(self, url):
         pass
 
 
 class Imgur(ImageUploader):
 
-    def __init__():
+    def __init__(self):
         self.imgur = pyimgur.Imgur(CLIENT_ID, CLIENT_SECRET)
 
-    def upload_image(filename):
+    def upload_image(self, filename):
         return self.imgur.upload_image(filename).link
 
-    def upload_album(title=DEFAULT_TITLE, image_list=[]):
+    def upload_album(self, title=DEFAULT_ALBUM_TITLE, image_list=[]):
         return self.imgur.create_album(title, image_list).link
 
 
 class Picasa(ImageUploader):
 
-    def __init__():
+    def __init__(self):
+        SCOPES = ['http://picasaweb.google.com/data/']
+        USER_AGENT = '4chan to reddit crossposter bot - /r/slashw'
+        token = gdata.gauth.OAuth2Token(client_id=CLIENT_ID,
+                                        client_secret=CLIENT_SECRET,
+                                        scope=' '.join(SCOPES),
+                                        user_agent=USER_AGENT)
 
 
 
