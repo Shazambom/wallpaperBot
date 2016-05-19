@@ -5,21 +5,7 @@ import praw       #to post links to reddit/r/slashw
 import OAuth2Util #OAuth2 for reddit
 import os         #to check for empty files
 import requests   #to see how many imgur requests remain
-
-
-def assign_directory_by_time():
-    """
-    Returns string depicting the current week of the year. For example,
-    "Y2016-W20" for the 20th week in 2016
-    """
-    path = 'Y'
-    date = datetime.datetime.now()
-    path = path + str(date.year)
-    path = path + '-W' + str(date.isocalendar()[1])  #the week of the year
-    return path
-
-
-PATH_TO_CONFIG = '/home/pi/GitHub/wallpaperBot/config.txt'
+import imgurbot
 
 #required by reddit when using a bot
 USER_AGENT = '4chan /w/ crossposter for /u/Shazambom'
@@ -27,14 +13,9 @@ USER_AGENT = '4chan /w/ crossposter for /u/Shazambom'
 #subreddit name - www.reddit.com/r/slashw
 SUBREDDIT = 'slashw'
 
-#path for the folder for this week in the raspberry pi
-PATH_BASE = '/media/UNTITLED/Wallpapers/' + assign_directory_by_time()
-
-image_uploader = Imgur()
-
 
 def consolidate_to_albums():
-    filenames = glob.glob(PATH_BASE + '/*.txt')
+    filenames = glob.glob(PATH_BASE + '*.txt')
 
     r = praw.Reddit(user_agent=USER_AGENT)
     o = OAuth2Util.OAuth2Util(r)

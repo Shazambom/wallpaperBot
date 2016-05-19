@@ -13,16 +13,16 @@ def assign_directory_by_time():
 
 image_uploader = Imgur()
 
-PATH_BASE = '/media/UNTITLED/Wallpapers/' + assign_directory_by_time()
-JPG_PATH = PATH_BASE + '/*.jpg'
-JPEG_PATH = PATH_BASE + '/*.jpeg'
-PNG_PATH = PATH_BASE + '/*.png'
-APNG_PATH = PATH_BASE + '/*.apng'
-BMP_PATH = PATH_BASE + '/*.bmp'
-TIFF_PATH = PATH_BASE + '/*.tiff'
-TIF_PATH = PATH_BASE + '/*.tif'
-XCF_PATH = PATH_BASE + '/*.xcf'
-PDF_PATH = PATH_BASE + '/*.pdf'
+PATH_BASE = '/media/UNTITLED/Wallpapers/' + assign_directory_by_time() + '/'
+JPG_PATH = PATH_BASE + '*.jpg'
+JPEG_PATH = PATH_BASE + '*.jpeg'
+PNG_PATH = PATH_BASE + '*.png'
+APNG_PATH = PATH_BASE + '*.apng'
+BMP_PATH = PATH_BASE + '*.bmp'
+TIFF_PATH = PATH_BASE + '*.tiff'
+TIF_PATH = PATH_BASE + '*.tif'
+XCF_PATH = PATH_BASE + '*.xcf'
+PDF_PATH = PATH_BASE + '*.pdf'
 
 def get_image_filenamess_in_directory():
     filenames = []

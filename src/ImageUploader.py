@@ -1,12 +1,21 @@
 import pyimgur    #to upload files to imgur
 import gdata.photos.service
 
-PATH_TO_CONFIG = '/home/pi/GitHub/wallpaperBot/config.txt'
+# PATH_TO_CONFIG = '/home/pi/GitHub/wallpaperBot/config.txt'
+PATH_TO_CONFIG = '/home/yash/code/Ian4chanProject/wallpaperBot/src/config.txt'
 DEFAULT_TITLE = "/R/SLASHW"
 UPLOAD_LIMIT = 1000 # don't upload more that a thousand images in a day
 
+config = open(PATH_TO_CONFIG, 'r')
+CLIENT_ID = config.readline()
+CLIENT_SECRET = config.readline()
+config.close()
+
 
 class ImageUploader:
+    """
+    Interface for using different apis to upload images to the internet
+    """
 
     def upload_image(filename):
         pass
@@ -21,11 +30,7 @@ class ImageUploader:
 class Imgur(ImageUploader):
 
     def __init__():
-        config = open(PATH_TO_CONFIG, 'r')
-        self.CLIENT_ID = config.readline()
-        self.CLIENT_SECRET = config.readline()
-        config.close()
-        self.imgur = pyimgur.Imgur(self.CLIENT_ID, self.CLIENT_SECRET)
+        self.imgur = pyimgur.Imgur(CLIENT_ID, CLIENT_SECRET)
 
     def upload_image(filename):
         return self.imgur.upload_image(filename).link
@@ -35,21 +40,17 @@ class Imgur(ImageUploader):
 
 
 class Picasa(ImageUploader):
-    pass
+
+    def __init__():
+
+
+
     #How to create a client (from google example):
     # gd_client = gdata.photos.service.PhotosService()
-
-    # Instead of using these lines I think we can just use Oauth2.0 to get in but I believe this will work
-    # gd_client.email = '=change='     
-    # gd_client.password = '=change='  
-
-    # gd_client.source = 'api-sample-google-com'
-    # gd_client.ProgrammaticLogin()
 
     #How to create a new album (from google example):
     # album = gd_client.InsertAlbum(title='New album', summary='This is an album')
 
     #How to upload a photo (from google example):
-    # photo = gd_client.InsertPhotoSimple(album_url, 'New Photo', 
+    # photo = gd_client.InsertPhotoSimple(album_url, 'New Photo',
     #     'Uploaded using the API', filename, content_type='image/jpeg')
-
