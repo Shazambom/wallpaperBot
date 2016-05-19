@@ -74,21 +74,23 @@ public class ThreadRipper {
     private int downloadImages(List<String> links, List<String> names, UserAgent userAgent, HashMap<Integer, String> files) {
         int success = 0;
         for (int i = 0; i < links.size(); i++) {
-            if ((files.size() == 0 || !files.containsValue(names.get(i))) && !duplicateNames.containsValue(names.get(i))) {
-                try {
-                    userAgent.download(links.get(i), new File(filePath + names.get(i)));
-                    success++;
-                    total++;
-                    System.out.print("#");
-                } catch (JauntException e) {
-                    System.out.println("\nFile: " + (i + 1) + " at the url: " + links.get(i) + " failed to download");
-                    success += downloadImages(links.subList(i + 1, links.size()), names.subList(i + 1, names.size()), userAgent, files);
-                    i = links.size();
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (Exception e) {
-                    Thread.currentThread().interrupt();
+            if (!duplicateNames.containsValue(names.get(i))) {
+                if ((files.size() == 0 || !files.containsValue(names.get(i)))) {
+                    try {
+                        userAgent.download(links.get(i), new File(filePath + names.get(i)));
+                        success++;
+                        total++;
+                        System.out.print("#");
+                    } catch (JauntException e) {
+                        System.out.println("\nFile: " + (i + 1) + " at the url: " + links.get(i) + " failed to download");
+                        success += downloadImages(links.subList(i + 1, links.size()), names.subList(i + 1, names.size()), userAgent, files);
+                        i = links.size();
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (Exception e) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
             }
         }
