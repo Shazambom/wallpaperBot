@@ -50,3 +50,6 @@ config.txt
 
 #Java class files
 *.class
+
+#Ignore all production code
+out/production/*

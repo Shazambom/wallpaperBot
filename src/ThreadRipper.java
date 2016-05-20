@@ -4,15 +4,11 @@ import com.jaunt.JauntException;
 import com.jaunt.UserAgent;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,7 +59,22 @@ public class ThreadRipper {
             }
 
             System.out.print("[");
-            int success = downloadImages(links, names, userAgent, files);
+            FileOutputStream duplicateStream;
+            try {
+                duplicateStream = new FileOutputStream(duplicates, true);
+            } catch (Exception e) {
+                e.printStackTrace();
+                duplicateStream = null;
+            }
+            int success = downloadImages(links, names, userAgent, files, duplicateStream);
+            if(duplicateStream != null) {
+                try {
+                    duplicateStream.flush();
+                    duplicateStream.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             System.out.println("]");
             System.out.println(success + " unique images successfully downloaded");
 
@@ -71,19 +82,26 @@ public class ThreadRipper {
             e.printStackTrace();
         }
     }
-    private int downloadImages(List<String> links, List<String> names, UserAgent userAgent, HashMap<Integer, String> files) {
+    private int downloadImages(List<String> links, List<String> names, UserAgent userAgent, HashMap<Integer, String> files, FileOutputStream duplicateStream) {
         int success = 0;
         for (int i = 0; i < links.size(); i++) {
             if (!duplicateNames.containsValue(names.get(i))) {
                 if ((files.size() == 0 || !files.containsValue(names.get(i)))) {
                     try {
                         userAgent.download(links.get(i), new File(filePath + names.get(i)));
+                        if(duplicateStream != null) {
+                            try {
+                                duplicateStream.write((names.get(i) + "\n").getBytes());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
                         success++;
                         total++;
                         System.out.print("#");
                     } catch (JauntException e) {
                         System.out.println("\nFile: " + (i + 1) + " at the url: " + links.get(i) + " failed to download");
-                        success += downloadImages(links.subList(i + 1, links.size()), names.subList(i + 1, names.size()), userAgent, files);
+                        success += downloadImages(links.subList(i + 1, links.size()), names.subList(i + 1, names.size()), userAgent, files, duplicateStream);
                         i = links.size();
                     }
                     try {
@@ -174,12 +192,9 @@ public class ThreadRipper {
     public void cleanUp() {
         ArrayList<File> folder = new ArrayList<File>();
         try {
-            PrintWriter out = new PrintWriter(duplicates);
             for (File element : new File(filePath).listFiles()) {
                 folder.add(element);
-                out.println(element.getName());
             }
-            out.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
