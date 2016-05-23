@@ -28,9 +28,9 @@ def consolidate_to_albums():
         urls = open(filename, 'r')
 
         for url in urls:
-            images.append(imgur.get_at_url(url))
+            images.append(url)
 
-        title = filename.rsplit('/', 1)[1][:-4]
+        title = filename[:-4]  # remove '.txt' at the end
         album = imgur.upload_album(title=title, images=images)
         print('album made at ' + album.link)
 

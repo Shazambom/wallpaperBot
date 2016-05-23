@@ -7,8 +7,8 @@ DEFAULT_ALBUM_TITLE = "/R/SLASHW"
 UPLOAD_LIMIT = 1000 # don't upload more that a thousand images in a day
 
 config = open(PATH_TO_CONFIG, 'r')
-CLIENT_ID = config.readline()
-CLIENT_SECRET = config.readline()
+CLIENT_ID = config.readline()[:-1] # remove the \n at the end
+CLIENT_SECRET = config.readline()[:-1] # remove the \n at the end
 config.close()
 
 
@@ -36,6 +36,7 @@ class Imgur(ImageUploader):
         return self.imgur.upload_image(filename).link
 
     def upload_album(self, title=DEFAULT_ALBUM_TITLE, image_list=[]):
+        image_list = [self.imgur.get_at_url(url) for url in image_list]
         return self.imgur.create_album(title, image_list).link
 
 
