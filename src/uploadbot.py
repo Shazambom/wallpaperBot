@@ -126,5 +126,3 @@ def upload():
             if uploaded_count == -1:
                 print "force stop due to upload limit"
                 return -1
-
-upload()
