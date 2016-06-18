@@ -1,0 +1,16 @@
+Jaunt 1.1.8 (Monthly Edition) Release Notes
+
+Release date: Jun 14, 2016
+Expiry date: Jul 31, 2016
+
+Installation Instructions & Quickstart Tutorial:
+http://jaunt-api.com/jaunt-tutorial.htm
+
+CHANGES:
+
+bugfix: method Element.findAttributeValues(query) now correctly returns all attributes matching the query where previously certain attributes were not searched.
+
+changes to the API as listed below:
+No changes to public members in the library.
+
+
