@@ -1,6 +1,5 @@
 import com.jaunt.Element;
 import com.jaunt.Elements;
-import com.jaunt.JauntException;
 import com.jaunt.UserAgent;
 
 import java.awt.*;
@@ -78,7 +77,7 @@ public class ThreadRipper {
             System.out.println("]");
             System.out.println(success + " unique images successfully downloaded");
 
-        } catch(JauntException e) {
+        } catch(Exception e) {
             e.printStackTrace();
         }
     }
@@ -99,7 +98,7 @@ public class ThreadRipper {
                         success++;
                         total++;
                         System.out.print("#");
-                    } catch (JauntException e) {
+                    } catch (Exception e) {
                         System.out.println("\nFile: " + (i + 1) + " at the url: " + links.get(i) + " failed to download");
                         success += downloadImages(links.subList(i + 1, links.size()), names.subList(i + 1, names.size()), userAgent, files, duplicateStream);
                         i = links.size();
@@ -151,12 +150,12 @@ public class ThreadRipper {
             removeCopyCats(threadUrls);
             try {
                 userAgent.doc.submit("Next");
-            } catch (JauntException e) {
+            } catch (Exception e) {
                 return threadUrls;
             }
             threadUrls.addAll(getThreads(userAgent.doc.getUrl()));
 
-        } catch(JauntException e) {
+        } catch(Exception e) {
             e.printStackTrace();
         }
         return threadUrls;
@@ -205,14 +204,6 @@ public class ThreadRipper {
             double percentage = folder.size() / 100;
             for (int i = 0; i < folder.size(); i++) {
                 if (!toRemove.contains(folder.get(i))) {
-//                    try {
-//                        BufferedImage image = ImageIO.read(folder.get(i));
-//                        if (image.getHeight() < 720 || image.getWidth() < 1080){
-//                            toRemove.add(folder.get(i));
-//                        }
-//                    } catch (Exception e) {
-//                        continue;
-//                    }
                     String suffix = getFileSuffix(folder.get(i).getPath());
                     if (suffix.equals("jpeg") || suffix.equals("png")
                             || suffix.equals("jpg") || suffix.equals("apng")
