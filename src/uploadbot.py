@@ -12,7 +12,7 @@ def assign_directory_by_time():
     return path
 
 
-image_uploader = ImageUploader.Imgur()
+image_uploader = ImageUploader.Imgur() #change this to picasa when it's finished
 
 # PATH_BASE = '/media/UNTITLED/Wallpapers/'
 PATH_BASE = '/home/yash/code/Ian4chanProject/Images/'

@@ -4,30 +4,14 @@ import gdata.gauth
 # PATH_TO_CONFIG = '/home/pi/GitHub/wallpaperBot/config.txt'
 PATH_TO_CONFIG = '/home/yash/PycharmProjects/wallpaperBot/config.txt'
 DEFAULT_ALBUM_TITLE = "/R/SLASHW"
-UPLOAD_LIMIT = 1000 # don't upload more that a thousand images in a day
+UPLOAD_LIMIT = 1000  # don't upload more that a thousand images in a day
 
 config = open(PATH_TO_CONFIG, 'r')
-CLIENT_ID = config.readline()[:-1] # remove the \n at the end
-CLIENT_SECRET = config.readline()[:-1] # remove the \n at the end
+CLIENT_ID = config.readline()[:-1]  # remove the \n at the end
+CLIENT_SECRET = config.readline()[:-1]  # remove the \n at the end
 config.close()
 
-
-class ImageUploader:
-    """
-    Interface for using different api's to upload images to the internet
-    """
-
-    def upload_image(self, filename):
-        pass
-
-    def upload_album(self, title=DEFAULT_ALBUM_TITLE, image_list=[]):
-        pass
-
-    def get_image_at(self, url):
-        pass
-
-
-class Imgur(ImageUploader):
+class Imgur:
 
     def __init__(self):
         self.imgur = pyimgur.Imgur(CLIENT_ID, CLIENT_SECRET)
@@ -36,11 +20,17 @@ class Imgur(ImageUploader):
         return self.imgur.upload_image(filename).link
 
     def upload_album(self, title=DEFAULT_ALBUM_TITLE, image_list=[]):
-        image_list = [self.imgur.get_at_url(url) for url in image_list]
-        return self.imgur.create_album(title, image_list).link
+        # FIXME: get_at_url will only work with 'http://imgur.com/5qIObqw' type of link
+        # FIXME: will not work with 'http://i.imgur.com/5qIObqw.jpg' that we are supplying
+        images = [self.imgur.get_image(Imgur.get_id(url)) for url in image_list]
+        return self.imgur.create_album(title, images).link
+
+    @staticmethod
+    def get_id(url):
+        return url[:-4].rsplit('/', 1)[1]
 
 
-class Picasa(ImageUploader):
+class Picasa:
 
     def __init__(self):
         SCOPES = ['http://picasaweb.google.com/data/']
