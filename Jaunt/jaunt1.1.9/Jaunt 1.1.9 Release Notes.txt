@@ -1,0 +1,13 @@
+Jaunt 1.1.9 (Monthly Edition) Release Notes
+
+Release date: Jul 16, 2016
+Expiry date: Aug 31, 2016
+
+Installation Instructions & Quickstart Tutorial:
+http://jaunt-api.com/jaunt-tutorial.htm
+
+CHANGES:
+
+No changes to public classes in the library.
+
+
