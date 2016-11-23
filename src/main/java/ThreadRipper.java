@@ -1,3 +1,5 @@
+package main.java;
+
 import com.jaunt.Element;
 import com.jaunt.Elements;
 import com.jaunt.UserAgent;
