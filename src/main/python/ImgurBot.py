@@ -1,15 +1,15 @@
-# from imgurpython import ImgurClient
-import pyimgur
 import os
 import glob
 import praw       
 import OAuth2Util 
+import requests
+from base64 import b64encode
 
 # PATH_TO_CONFIG = '/home/pi/GitHub/wallpaperBot/config.txt'
 PATH_TO_CONFIG = '/Users/ian/Projects/wallpaperBot/config.txt'
 # PATH_TO_CONFIG = '/home/yash/PycharmProjects/wallpaperBot/config.txt'
 DEFAULT_ALBUM_TITLE = "/R/SLASHW"
-UPLOAD_LIMIT = 1250  # don't upload more that a thousand images in a day
+UPLOAD_LIMIT = 1250  
 REQUEST_LIMIT = 12500
 # PATH_BASE = '/media/UNTITLED/Wallpapers/'
 PATH_BASE = '/Users/ian/Desktop/RippedWallpapers/'
@@ -22,49 +22,37 @@ CLIENT_SECRET = config.readline()[:-1]  # remove the \n at the end
 ACCESS_TOKEN = None
 REFRESH_TOKEN = None
 config.close()
-# imgur_client = ImgurClient(CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN, REFRESH_TOKEN)
-imgur_client = pyimgur.Imgur(CLIENT_ID, CLIENT_SECRET)
+imgUrl = "https://api.imgur.com/3/image"
+albumUrl = "https://api.imgur.com/3/album"
+imgurHeader = {'Authorization': "Client-ID "+str(CLIENT_ID)}
+imgurAlbumUrl = "https://imgur.com/a/"
 
-
-
-# def authenticate():
-# 	# Get client ID and secret from auth.ini
-
-# 	client = ImgurClient(CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN, REFRESH_TOKEN)
-
-# 	# Authorization flow, pin example (see docs for other auth types)
-# 	authorization_url = client.get_auth_url('pin')
-
-# 	print("Go to the following URL: {0}".format(authorization_url))
-
-# 	# Read in the pin, handle Python 2 or 3 here.
-# 	pin = raw_input("Enter pin code: ")
-# 	print("-" + str(pin) + "-")
-
-# 	# ... redirect user to `authorization_url`, obtain pin (or code or token) ...
-# 	# credentials = client.authorize(pin, 'pin')
-# 	credentials = authorize(client, pin, 'pin')
-# 	client.set_user_auth(credentials['access_token'], credentials['refresh_token'])
-
-# 	print("Authentication successful! Here are the details:")
-# 	print("   Access token:  {0}".format(credentials['access_token']))
-# 	print("   Refresh token: {0}".format(credentials['refresh_token']))
-
-# 	return client
 
 
 def upload_images(album_files):
     images = []
+    toDelete = []
     for filename in album_files:
-        # images.append(imgur_client.upload_from_path(filename)['id'])
-        images.append(imgur_client.upload_image(filename).id)
+    	img = open(filename, 'rb')
+    	data = {'key': CLIENT_SECRET, 'image': b64encode(img.read()), 'type': 'base64'}
+        resp = requests.post(imgUrl, headers=imgurHeader, data=data)
+        img.close()
+        content = resp.json()
+        if content['success']:
+			images.append(content['data']['id'])
+			toDelete.append(filename)
     print("Uploaded: " + str(len(images)) + " images")
-    return images
+    return (images, toDelete)
 
 def upload_album(title=DEFAULT_ALBUM_TITLE, album_files=[]):
-	images = upload_images(album_files)
-	# return imgur_client.create_album({"title":title, "ids": images})
-	return imgur_client.create_album(title, images)
+	images, toDelete = upload_images(album_files)
+	resp = requests.post(albumUrl, headers=imgurHeader, data={'key': CLIENT_SECRET, 'ids[]': images, 'title': title})
+	content = resp.json()
+	# if content['success']:
+	# 	for filename in toDelete:
+			# os.remove(filename)
+	return(imgurAlbumUrl+str(content['data']['id']))
+
 
 def get_image_filenames(path_base):
     JPG_PATH = path_base + '*.jpg'
@@ -87,6 +75,8 @@ def get_image_filenames(path_base):
     filenames.extend(glob.glob(TIFF_PATH))
     filenames.extend(glob.glob(PDF_PATH))
     filenames.extend(glob.glob(XCF_PATH))
+    if len(filenames) == 0:
+    	os.rmdir(path_base[:-1])
     return filenames
 
 def get_thread_name(filename):
@@ -100,7 +90,6 @@ def get_folders():
 
 def get_valid_filenames():
 	folders = get_folders()
-	print folders
 	filenames = []
 	for folder in folders:
 		filenames.extend(get_image_filenames(folder+"/"))
@@ -130,9 +119,10 @@ def __main__():
 	threads = create_threads(filenames)
 	print "Number of threads created:", str(len(threads))
 	for thread in threads:
-		album = upload_album(thread, threads[thread])
-		reddit.submit(SUBREDDIT, album.title, url=album.link)
-		print "Submitted:", album.title, ":", album.link
+		link = upload_album(thread, threads[thread])
+		reddit.submit(SUBREDDIT, thread, url=link)
+		print "Submitted:", thread, ":", link
+
 	
 if __name__ == "__main__":
 	__main__()
