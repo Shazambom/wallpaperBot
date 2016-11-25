@@ -4,6 +4,7 @@ import praw
 import OAuth2Util 
 import requests
 from base64 import b64encode
+from time import sleep
 
 # PATH_TO_CONFIG = '/home/pi/GitHub/wallpaperBot/config.txt'
 PATH_TO_CONFIG = '/Users/ian/Projects/wallpaperBot/config.txt'
@@ -33,25 +34,37 @@ def upload_images(album_files):
     images = []
     toDelete = []
     for filename in album_files:
-    	img = open(filename, 'rb')
-    	data = {'key': CLIENT_SECRET, 'image': b64encode(img.read()), 'type': 'base64'}
-        resp = requests.post(imgUrl, headers=imgurHeader, data=data)
-        img.close()
-        content = resp.json()
-        if content['success']:
-			images.append(content['data']['id'])
-			toDelete.append(filename)
+        for i in range(0, 3):
+            img = open(filename, 'rb')
+            data = {'key': CLIENT_SECRET, 'image': b64encode(img.read()), 'type': 'base64'}
+            resp = requests.post(imgUrl, headers=imgurHeader, data=data)
+            img.close()
+            content = resp.json()
+            if content['status'] is not 200:
+                print(content['data']['error'])
+            if content['status'] == 400:
+                print("Sleeping for a bit, nighty night")
+                sleep(900)
+            print(content)
+            if content['success']:
+                sleep(0.25)
+                images.append(content['data']['id'])
+                toDelete.append(filename)
+                print "Uploaded image: " + content['data']['link']
+                break
     print("Uploaded: " + str(len(images)) + " images")
     return (images, toDelete)
 
 def upload_album(title=DEFAULT_ALBUM_TITLE, album_files=[]):
-	images, toDelete = upload_images(album_files)
-	resp = requests.post(albumUrl, headers=imgurHeader, data={'key': CLIENT_SECRET, 'ids[]': images, 'title': title})
-	content = resp.json()
-	# if content['success']:
-	# 	for filename in toDelete:
-			# os.remove(filename)
-	return(imgurAlbumUrl+str(content['data']['id']))
+    images, toDelete = upload_images(album_files)
+    if len(images) > 0:
+        resp = requests.post(albumUrl, headers=imgurHeader, data={'key': CLIENT_SECRET, 'ids[]': images, 'title': title})
+        content = resp.json()
+        if content['success']:
+            for filename in toDelete:
+                os.remove(filename)
+        return(imgurAlbumUrl+str(content['data']['id']))
+    return(None)
 
 
 def get_image_filenames(path_base):
@@ -76,7 +89,7 @@ def get_image_filenames(path_base):
     filenames.extend(glob.glob(PDF_PATH))
     filenames.extend(glob.glob(XCF_PATH))
     if len(filenames) == 0:
-    	os.rmdir(path_base[:-1])
+        os.rmdir(path_base[:-1])
     return filenames
 
 def get_thread_name(filename):
@@ -86,25 +99,25 @@ def get_thread_name(filename):
     """
     return filename.split('_', 1)[0].rsplit('/', 1)[-1]
 def get_folders():
-	return [x[0] for x in os.walk(PATH_BASE)][1:]
+    return [x[0] for x in os.walk(PATH_BASE)][1:]
 
 def get_valid_filenames():
-	folders = get_folders()
-	filenames = []
-	for folder in folders:
-		filenames.extend(get_image_filenames(folder+"/"))
-		if len(filenames) > UPLOAD_LIMIT:
-			filenames = filenames[:UPLOAD_LIMIT]
-			break
-	return filenames
+    folders = get_folders()
+    filenames = []
+    for folder in folders:
+        filenames.extend(get_image_filenames(folder+"/"))
+        if len(filenames) > UPLOAD_LIMIT:
+            filenames = filenames[:UPLOAD_LIMIT]
+            break
+    return filenames
 def create_threads(filenames):
-	dic = {}
-	for filename in filenames:
-		threadname = get_thread_name(filename)
-		if threadname not in dic:
-			dic[threadname] = []
-		dic[threadname].append(filename)
-	return dic
+    dic = {}
+    for filename in filenames:
+        threadname = get_thread_name(filename)
+        if threadname not in dic:
+            dic[threadname] = []
+        dic[threadname].append(filename)
+    return dic
 
 def reddit_login(reddit):
     o = OAuth2Util.OAuth2Util(reddit)
@@ -112,19 +125,20 @@ def reddit_login(reddit):
     print('I am logged in to reddit')
 
 def __main__():
-	reddit = praw.Reddit(user_agent=USER_AGENT)
-	reddit_login(reddit)
-	filenames = get_valid_filenames()
-	print "Number of files to be uploaded:", str(len(filenames))
-	threads = create_threads(filenames)
-	print "Number of threads created:", str(len(threads))
-	for thread in threads:
-		link = upload_album(thread, threads[thread])
-		reddit.submit(SUBREDDIT, thread, url=link)
-		print "Submitted:", thread, ":", link
+    reddit = praw.Reddit(user_agent=USER_AGENT)
+    reddit_login(reddit)
+    filenames = get_valid_filenames()
+    print "Number of files to be uploaded:", str(len(filenames))
+    threads = create_threads(filenames)
+    print "Number of threads created:", str(len(threads))
+    for thread in threads:
+        link = upload_album(thread, threads[thread])
+        if link is not None:
+            reddit.submit(SUBREDDIT, thread, url=link)
+            print "Submitted:", thread, ":", link
 
-	
+    
 if __name__ == "__main__":
-	__main__()
+    __main__()
 
 
