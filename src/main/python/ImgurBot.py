@@ -7,15 +7,22 @@ import shutil
 from base64 import b64encode
 from time import sleep, time
 
-PATH_TO_CONFIG = '/home/pi/GitHub/wallpaperBot/config.txt'
-# PATH_TO_CONFIG = '/Users/ian/Projects/wallpaperBot/config.txt'
-# PATH_TO_CONFIG = '/home/yash/PycharmProjects/wallpaperBot/config.txt'
+TEST = False
+PATH_TO_CONFIG = ""
+PATH_BASE = ""
+
+if TEST:
+    PATH_TO_CONFIG = '/Users/ian/Projects/wallpaperBot/config.txt'
+    PATH_BASE = '/Users/ian/Desktop/RippedWallpapers/'
+else:
+    PATH_TO_CONFIG = '/home/pi/GitHub/wallpaperBot/config.txt'
+    PATH_BASE = '/media/UNTITLED/Wallpapers/'
+
 DEFAULT_ALBUM_TITLE = "/R/SLASHW"
 UPLOAD_LIMIT = 1200  
 REQUEST_LIMIT = 12250
 REQUEST_COUNTER = 0
-PATH_BASE = '/media/UNTITLED/Wallpapers/'
-# PATH_BASE = '/Users/ian/Desktop/RippedWallpapers/'
+
 USER_AGENT = '4chan /w/ crossposter for /u/Shazambom'
 SUBREDDIT = 'slashw'
 
@@ -122,16 +129,18 @@ def get_thread_name(filename):
     """
     return filename.split('_', 1)[0].rsplit('/', 1)[-1]
 def get_folders():
-    return [x[0] for x in os.walk(PATH_BASE)][1:]
+    return [PATH_BASE+x for x in os.listdir(PATH_BASE) if os.path.isdir(PATH_BASE+x)]
 
 def get_valid_filenames():
     folders = get_folders()
+    print("Gathered folders")
     filenames = []
     for folder in folders:
         filenames.extend(get_image_filenames(folder+"/"))
         if len(filenames) > UPLOAD_LIMIT:
             filenames = filenames[:UPLOAD_LIMIT]
             break
+    print("Gathered file names")
     return filenames
 def create_threads(filenames):
     dic = {}
