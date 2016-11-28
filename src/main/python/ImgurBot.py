@@ -7,15 +7,15 @@ import shutil
 from base64 import b64encode
 from time import sleep, time
 
-# PATH_TO_CONFIG = '/home/pi/GitHub/wallpaperBot/config.txt'
-PATH_TO_CONFIG = '/Users/ian/Projects/wallpaperBot/config.txt'
+PATH_TO_CONFIG = '/home/pi/GitHub/wallpaperBot/config.txt'
+# PATH_TO_CONFIG = '/Users/ian/Projects/wallpaperBot/config.txt'
 # PATH_TO_CONFIG = '/home/yash/PycharmProjects/wallpaperBot/config.txt'
 DEFAULT_ALBUM_TITLE = "/R/SLASHW"
-UPLOAD_LIMIT = 750  
-REQUEST_LIMIT = 11000
+UPLOAD_LIMIT = 1200  
+REQUEST_LIMIT = 12250
 REQUEST_COUNTER = 0
-# PATH_BASE = '/media/UNTITLED/Wallpapers/'
-PATH_BASE = '/Users/ian/Desktop/RippedWallpapers/'
+PATH_BASE = '/media/UNTITLED/Wallpapers/'
+# PATH_BASE = '/Users/ian/Desktop/RippedWallpapers/'
 USER_AGENT = '4chan /w/ crossposter for /u/Shazambom'
 SUBREDDIT = 'slashw'
 
