@@ -3,15 +3,17 @@ import glob
 import praw       
 import OAuth2Util 
 import requests
+import shutil
 from base64 import b64encode
-from time import sleep
+from time import sleep, time
 
 # PATH_TO_CONFIG = '/home/pi/GitHub/wallpaperBot/config.txt'
 PATH_TO_CONFIG = '/Users/ian/Projects/wallpaperBot/config.txt'
 # PATH_TO_CONFIG = '/home/yash/PycharmProjects/wallpaperBot/config.txt'
 DEFAULT_ALBUM_TITLE = "/R/SLASHW"
-UPLOAD_LIMIT = 1250  
-REQUEST_LIMIT = 12500
+UPLOAD_LIMIT = 750  
+REQUEST_LIMIT = 11000
+REQUEST_COUNTER = 0
 # PATH_BASE = '/media/UNTITLED/Wallpapers/'
 PATH_BASE = '/Users/ian/Desktop/RippedWallpapers/'
 USER_AGENT = '4chan /w/ crossposter for /u/Shazambom'
@@ -29,41 +31,62 @@ imgurHeader = {'Authorization': "Client-ID "+str(CLIENT_ID)}
 imgurAlbumUrl = "https://imgur.com/a/"
 
 
-
-def upload_images(album_files):
+def upload_images(album_files, REQUEST_COUNTER):
     images = []
     toDelete = []
     for filename in album_files:
         for i in range(0, 3):
-            img = open(filename, 'rb')
-            data = {'key': CLIENT_SECRET, 'image': b64encode(img.read()), 'type': 'base64'}
-            resp = requests.post(imgUrl, headers=imgurHeader, data=data)
-            img.close()
-            content = resp.json()
-            if content['status'] is not 200:
-                print(content['data']['error'])
-            if content['status'] == 400:
-                print("Sleeping for a bit, nighty night")
-                sleep(900)
-            print(content)
-            if content['success']:
-                sleep(0.25)
-                images.append(content['data']['id'])
-                toDelete.append(filename)
-                print "Uploaded image: " + content['data']['link']
-                break
+            try:
+                img = open(filename, 'rb')
+                data = {'key': CLIENT_SECRET, 'image': b64encode(img.read()), 'type': 'base64'}
+                REQUEST_COUNTER += 1
+                resp = requests.post(imgUrl, headers=imgurHeader, data=data)
+                img.close()
+                content = resp.json()
+                if not content['success']:
+                    print(content['data']['error'])
+                if content['status'] == 400:
+                    try:
+                        print("Sleeping for a bit, nighty night")
+                        timeToSleep = int(content['data']['error'][40:42].strip())
+                        sleep((timeToSleep + 1)* 60)
+                    except:
+                        pass
+                if content['success']:
+                    sleep(0.25)
+                    images.append(content['data']['id'])
+                    toDelete.append(filename)
+                    print "Uploaded image: " + content['data']['link']
+                    break
+            except Exception as err:
+                print(err)
+        if REQUEST_COUNTER >= REQUEST_LIMIT:
+            break
     print("Uploaded: " + str(len(images)) + " images")
     return (images, toDelete)
 
 def upload_album(title=DEFAULT_ALBUM_TITLE, album_files=[]):
-    images, toDelete = upload_images(album_files)
+    global REQUEST_COUNTER
+    images = []
+    toDelete = []
+    if REQUEST_COUNTER < REQUEST_LIMIT:
+        images, toDelete = upload_images(album_files, REQUEST_COUNTER)
     if len(images) > 0:
-        resp = requests.post(albumUrl, headers=imgurHeader, data={'key': CLIENT_SECRET, 'ids[]': images, 'title': title})
-        content = resp.json()
-        if content['success']:
-            for filename in toDelete:
-                os.remove(filename)
-        return(imgurAlbumUrl+str(content['data']['id']))
+        for i in range(0, 3):
+            try:
+                REQUEST_COUNTER += 1
+                resp = requests.post(albumUrl, headers=imgurHeader, data={'key': CLIENT_SECRET, 'ids[]': images, 'title': title})
+                REQUEST_COUNTER += 1
+                content = resp.json()
+                if content['success']:
+                    for filename in toDelete:
+                        try:
+                            os.remove(filename)
+                        except:
+                            pass
+                    return(imgurAlbumUrl+str(content['data']['id']))
+            except Exception as err:
+                print(err)
     return(None)
 
 
@@ -89,7 +112,7 @@ def get_image_filenames(path_base):
     filenames.extend(glob.glob(PDF_PATH))
     filenames.extend(glob.glob(XCF_PATH))
     if len(filenames) == 0:
-        os.rmdir(path_base[:-1])
+        shutil.rmtree(path_base[:-1])
     return filenames
 
 def get_thread_name(filename):
@@ -125,17 +148,29 @@ def reddit_login(reddit):
     print('I am logged in to reddit')
 
 def __main__():
+    begining = time()
     reddit = praw.Reddit(user_agent=USER_AGENT)
     reddit_login(reddit)
     filenames = get_valid_filenames()
     print "Number of files to be uploaded:", str(len(filenames))
     threads = create_threads(filenames)
+    while True:
+        notTooLong = True
+        keys = list(threads.keys())
+        for thread in keys:
+            if len(threads[thread]) > 150:
+                    notTooLong = False
+                    threads[thread+'-cont'] = threads[thread][150:]
+                    threads[thread] = threads[thread][:150]
+        if notTooLong:
+            break
     print "Number of threads created:", str(len(threads))
     for thread in threads:
         link = upload_album(thread, threads[thread])
         if link is not None:
             reddit.submit(SUBREDDIT, thread, url=link)
             print "Submitted:", thread, ":", link
+    print("Time to execute: "+ str(time() - begining))
 
     
 if __name__ == "__main__":
