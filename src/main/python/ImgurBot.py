@@ -83,7 +83,6 @@ def upload_album(title=DEFAULT_ALBUM_TITLE, album_files=[]):
             try:
                 REQUEST_COUNTER += 1
                 resp = requests.post(albumUrl, headers=imgurHeader, data={'key': CLIENT_SECRET, 'ids[]': images, 'title': title})
-                REQUEST_COUNTER += 1
                 content = resp.json()
                 if content['success']:
                     for filename in toDelete:
@@ -177,7 +176,13 @@ def __main__():
     for thread in threads:
         link = upload_album(thread, threads[thread])
         if link is not None:
-            reddit.submit(SUBREDDIT, thread, url=link)
+            for i in range(0,3):
+                try:
+                    reddit.submit(SUBREDDIT, thread, url=link)
+                    break
+                except Exception as err:
+                    print(err)
+                    sleep(1)
             print "Submitted:", thread, ":", link
     print("Time to execute: "+ str(time() - begining))
 
