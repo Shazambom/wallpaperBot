@@ -22,6 +22,7 @@ DEFAULT_ALBUM_TITLE = "/R/SLASHW"
 UPLOAD_LIMIT = 1200  
 REQUEST_LIMIT = 12250
 REQUEST_COUNTER = 0
+SECONDS_LIMIT = 82800
 
 USER_AGENT = '4chan /w/ crossposter for /u/Shazambom'
 SUBREDDIT = 'slashw'
@@ -90,10 +91,10 @@ def upload_album(title=DEFAULT_ALBUM_TITLE, album_files=[]):
                             os.remove(filename)
                         except:
                             pass
-                    return(imgurAlbumUrl+str(content['data']['id']))
+                    return((imgurAlbumUrl+str(content['data']['id']), len(images)))
             except Exception as err:
                 print(err)
-    return(None)
+    return((None, 0))
 
 
 def get_image_filenames(path_base):
@@ -173,18 +174,23 @@ def __main__():
         if notTooLong:
             break
     print "Number of threads created:", str(len(threads))
+    numImages = 0
     for thread in threads:
-        link = upload_album(thread, threads[thread])
+        link, imgUploaded = upload_album(thread, threads[thread])
         if link is not None:
             for i in range(0,3):
                 try:
                     reddit.submit(SUBREDDIT, thread, url=link)
+                    numImages += imgUploaded
                     break
                 except Exception as err:
                     print(err)
                     sleep(1)
             print "Submitted:", thread, ":", link
+        if (time() - begining) > SECONDS_LIMIT:
+            break
     print("Time to execute: "+ str(time() - begining))
+    print("Number of Images uploaded and submitted: " + str(numImages))
 
     
 if __name__ == "__main__":
