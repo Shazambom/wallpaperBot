@@ -237,7 +237,13 @@ public class ThreadRipper {
             resolveDuplicates(toRemove);
         } catch (Exception e) {
             System.out.println("Well shit");
-            e.printStackTrace();
+            StringBuilder sb = new StringBuilder(e.toString());
+            for (StackTraceElement ste : e.getStackTrace()) {
+                sb.append("\n\tat ");
+                sb.append(ste);
+            }
+            String trace = sb.toString();
+            System.out.println(trace);
         }
     }
     private void resolveDuplicates(ArrayList<File> toRemove) {
