@@ -180,7 +180,7 @@ def __main__():
         if link is not None:
             for i in range(0,3):
                 try:
-                    reddit.submit(SUBREDDIT, thread, url=link)
+                    reddit.submit(SUBREDDIT, thread.replace("-", " "), url=link)
                     numImages += imgUploaded
                     break
                 except Exception as err:
