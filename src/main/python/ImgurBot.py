@@ -4,6 +4,7 @@ import praw
 import OAuth2Util 
 import requests
 import shutil
+import copy
 from base64 import b64encode
 from time import sleep, time
 
@@ -163,7 +164,8 @@ def __main__():
     filenames = get_valid_filenames()
     print "Number of files to be uploaded:", str(len(filenames))
     threads = create_threads(filenames)
-    for thread in threads:
+
+    for thread in copy.copy(threads):
         if(len(threads[thread]) < 2):
             del threads[thread]
     while True:
