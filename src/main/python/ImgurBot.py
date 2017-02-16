@@ -24,6 +24,7 @@ UPLOAD_LIMIT = 1200
 REQUEST_LIMIT = 12250
 REQUEST_COUNTER = 0
 SECONDS_LIMIT = 82800
+MIN_THREAD_SIZE = 4
 
 USER_AGENT = '4chan /w/ crossposter for /u/Shazambom'
 SUBREDDIT = 'slashw'
@@ -166,7 +167,7 @@ def __main__():
     threads = create_threads(filenames)
 
     for thread in copy.copy(threads):
-        if(len(threads[thread]) < 4):
+        if(len(threads[thread]) < MIN_THREAD_SIZE):
             del threads[thread]
     while True:
         notTooLong = True
