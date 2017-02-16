@@ -166,7 +166,7 @@ def __main__():
     threads = create_threads(filenames)
 
     for thread in copy.copy(threads):
-        if(len(threads[thread]) < 2):
+        if(len(threads[thread]) < 4):
             del threads[thread]
     while True:
         notTooLong = True
