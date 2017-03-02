@@ -133,17 +133,22 @@ def get_thread_name(filename):
 def get_folders():
     return [PATH_BASE+x for x in os.listdir(PATH_BASE) if os.path.isdir(PATH_BASE+x)]
 
-def get_valid_filenames():
+def get_valid_threads():
     folders = get_folders()
     print("Gathered folders")
     filenames = []
     for folder in folders:
         filenames.extend(get_image_filenames(folder+"/"))
-        if len(filenames) > UPLOAD_LIMIT:
-            filenames = filenames[:UPLOAD_LIMIT]
-            break
-    print("Gathered file names")
-    return filenames
+    threads = create_threads(filenames)
+    for thread in copy.deepcopy(threads):
+        if(len(threads[thread]) < MIN_THREAD_SIZE):
+            del threads[thread]
+    while (sum([len(thread) for thread in threads.values()]) > UPLOAD_LIMIT):
+        minKey = [key for key in threads.keys() if len(threads.get(key)) == min([len(thread) for thread in threads.values()])]
+        if len(minKey) > 0:
+            del threads[minKey[0]]
+    print("Got valid threads")
+    return threads
 def create_threads(filenames):
     dic = {}
     for filename in filenames:
@@ -162,13 +167,9 @@ def __main__():
     begining = time()
     reddit = praw.Reddit(user_agent=USER_AGENT)
     reddit_login(reddit)
-    filenames = get_valid_filenames()
-    print "Number of files to be uploaded:", str(len(filenames))
-    threads = create_threads(filenames)
+    threads = get_valid_threads()
 
-    for thread in copy.copy(threads):
-        if(len(threads[thread]) < MIN_THREAD_SIZE):
-            del threads[thread]
+    
     while True:
         notTooLong = True
         keys = list(threads.keys())
