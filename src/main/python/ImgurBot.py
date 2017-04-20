@@ -53,9 +53,16 @@ def upload_images(album_files, REQUEST_COUNTER):
                 resp = requests.post(imgUrl, headers=imgurHeader, data=data)
                 img.close()
                 content = resp.json()
-                print(content)
+                # print(content)
                 if not content['success']:
                     print(content['data']['error'])
+                    if content['data']['error']['code'] == 429:
+                    try:
+                        print("Sleeping for a bit, nighty night")
+                        timeToSleep = int(content['data']['error']['message'][40:42].strip())
+                        sleep((timeToSleep + 1)* 60)
+                    except:
+                        pass
                 if content['status'] == 400:
                     try:
                         print("Sleeping for a bit, nighty night")
@@ -63,13 +70,7 @@ def upload_images(album_files, REQUEST_COUNTER):
                         sleep((timeToSleep + 1)* 60)
                     except:
                         pass
-                if content['code'] == 429:
-                    try:
-                        print("Sleeping for a bit, nighty night")
-                        timeToSleep = int(content['message'][40:42].strip())
-                        sleep((timeToSleep + 1)* 60)
-                    except:
-                        pass
+                
                 if content['success']:
                     sleep(0.25)
                     images.append(content['data']['id'])
