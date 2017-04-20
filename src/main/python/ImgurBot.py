@@ -62,6 +62,13 @@ def upload_images(album_files, REQUEST_COUNTER):
                         sleep((timeToSleep + 1)* 60)
                     except:
                         pass
+                if content['code'] == 429:
+                    try:
+                        print("Sleeping for a bit, nighty night")
+                        timeToSleep = int(content['message'][40:42].strip())
+                        sleep((timeToSleep + 1)* 60)
+                    except:
+                        pass
                 if content['success']:
                     sleep(0.25)
                     images.append(content['data']['id'])
@@ -183,6 +190,25 @@ def __main__():
     print "Number of threads created:", str(len(threads))
     numImages = 0
     for thread in threads:
+        # if len(threads[thread]) > 15:
+        #     continue
+        # images, toDelete = upload_images(threads[thread], REQUEST_COUNTER)
+        # if len(images) > 0:
+        #     for i in range(0, len(images)):
+        #         for j in range(0,3):
+        #             try:
+        #                 reddit.submit(SUBREDDIT, thread.replace("-", " ") + " " +str(i), url=images[i])
+        #                 numImages += 1
+        #                 print "Submitted:", thread.replace("-", " ") + " " +str(i), ":", images[i]
+        #                 break
+        #             except Exception as err:
+        #                 print(err)
+        #                 sleep(1)
+        #     for filename in toDelete:
+        #         try:
+        #             os.remove(filename)
+        #         except:
+        #             pass
         link, imgUploaded = upload_album(thread, threads[thread])
         if link is not None:
             for i in range(0,3):
