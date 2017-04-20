@@ -53,6 +53,7 @@ def upload_images(album_files, REQUEST_COUNTER):
                 resp = requests.post(imgUrl, headers=imgurHeader, data=data)
                 img.close()
                 content = resp.json()
+                print(content)
                 if not content['success']:
                     print(content['data']['error'])
                 if content['status'] == 400:
