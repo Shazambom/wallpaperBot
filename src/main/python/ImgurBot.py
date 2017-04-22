@@ -96,6 +96,7 @@ def upload_album(title=DEFAULT_ALBUM_TITLE, album_files=[]):
                 REQUEST_COUNTER += 1
                 resp = requests.post(albumUrl, headers=imgurHeader, data={'key': CLIENT_SECRET, 'ids[]': images, 'title': title})
                 content = resp.json()
+                print(content)
                 if content['success']:
                     for filename in toDelete:
                         try:
