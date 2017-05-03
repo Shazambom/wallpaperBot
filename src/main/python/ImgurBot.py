@@ -73,7 +73,7 @@ def upload_images(album_files, REQUEST_COUNTER):
                 
                 if content['success']:
                     sleep(0.25)
-                    images.append(content['data']['id'])
+                    images.append(content['data']['deletehash'])
                     toDelete.append(filename)
                     print "Uploaded image: " + content['data']['link']
                     break
