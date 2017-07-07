@@ -1,7 +1,7 @@
 import os
 import glob
-import praw       
-import OAuth2Util 
+import praw
+import OAuth2Util
 import requests
 import shutil
 import copy
@@ -20,7 +20,7 @@ else:
     PATH_BASE = '/media/UNTITLED/Wallpapers/'
 
 DEFAULT_ALBUM_TITLE = "/R/SLASHW"
-UPLOAD_LIMIT = 1200  
+UPLOAD_LIMIT = 1200
 REQUEST_LIMIT = 12250
 REQUEST_COUNTER = 0
 SECONDS_LIMIT = 82800
@@ -179,15 +179,15 @@ def __main__():
     reddit_login(reddit)
     threads = get_valid_threads()
 
-    
+
     while True:
         notTooLong = True
         keys = list(threads.keys())
         for thread in keys:
             if len(threads[thread]) > 150:
-                    notTooLong = False
-                    threads[thread+'-cont'] = threads[thread][150:]
-                    threads[thread] = threads[thread][:150]
+                notTooLong = False
+                threads[thread+'-cont'] = threads[thread][150:]
+                threads[thread] = threads[thread][:150]
         if notTooLong:
             break
     print "Number of threads created:", str(len(threads))
@@ -197,7 +197,8 @@ def __main__():
         if link is not None:
             for i in range(0,3):
                 try:
-                    reddit.submit(SUBREDDIT, thread.replace("-", " "), url=link)
+                    title = "[{}] {}".format(len(threads[thread]), thread.replace("-", " "))
+                    reddit.submit(SUBREDDIT, title, url=link)
                     numImages += imgUploaded
                     break
                 except Exception as err:
@@ -209,7 +210,7 @@ def __main__():
     print("Time to execute: "+ str(time() - begining))
     print("Number of Images uploaded and submitted: " + str(numImages))
 
-    
+
 if __name__ == "__main__":
     __main__()
 
