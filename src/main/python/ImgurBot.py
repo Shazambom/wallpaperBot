@@ -176,7 +176,7 @@ def reddit_login(reddit):
 def __main__():
     begining = time()
     reddit = praw.Reddit('slashwBot', user_agent=USER_AGENT)
-    reddit_login(reddit)
+    #reddit_login(reddit)
     threads = get_valid_threads()
 
 
