@@ -198,7 +198,7 @@ def __main__():
             for i in range(0,3):
                 try:
                     title = "[{}] {}".format(len(threads[thread]), thread.replace("-", " "))
-                    reddit.submit(SUBREDDIT, title, url=link)
+                    reddit.subreddit(SUBREDDIT).submit(title, url=link)
                     numImages += imgUploaded
                     break
                 except Exception as err:
