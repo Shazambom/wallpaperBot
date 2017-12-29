@@ -1,7 +1,6 @@
 import os
 import glob
 import praw
-import OAuth2Util
 import requests
 import shutil
 import copy
@@ -168,17 +167,10 @@ def create_threads(filenames):
         dic[threadname].append(filename)
     return dic
 
-def reddit_login(reddit):
-    o = OAuth2Util.OAuth2Util(reddit)
-    o.refresh(force=True)
-    print('I am logged in to reddit')
-
 def __main__():
     begining = time()
     reddit = praw.Reddit('slashwBot', user_agent=USER_AGENT)
-    #reddit_login(reddit)
     threads = get_valid_threads()
-
 
     while True:
         notTooLong = True
