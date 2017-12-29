@@ -17,7 +17,7 @@ if TEST:
     PATH_BASE = '/Users/ian/Desktop/RippedWallpapers/'
 else:
     PATH_TO_CONFIG = '/home/pi/GitHub/wallpaperBot/config.txt'
-    PATH_BASE = '/media/UNTITLED/Wallpapers/'
+    PATH_BASE = '/media/pi/UNTITLED/Wallpapers/'
 
 DEFAULT_ALBUM_TITLE = "/R/SLASHW"
 UPLOAD_LIMIT = 1200
