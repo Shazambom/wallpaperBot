@@ -204,7 +204,7 @@ public class ThreadRipper {
 
         HashMap<File, String> checkSum = new HashMap<>();
         System.out.println("Computing Checksums...");
-        double percentage = folder.size() / 100;
+        int percentage = (int)Math.ceil(folder.size() / 100);
         System.out.print("[");
         for (int i = 0; i < folder.size(); i++) {
             checkSum.put(folder.get(i), getHash(folder.get(i)));
