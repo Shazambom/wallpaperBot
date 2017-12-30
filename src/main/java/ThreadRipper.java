@@ -11,6 +11,8 @@ import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
 import java.io.*;
 import java.nio.file.Files;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -200,10 +202,21 @@ public class ThreadRipper {
             e.printStackTrace();
         }
 
+        HashMap<File, String> checkSum = new HashMap<>();
+        System.out.println("Computing Checksums...");
+        double percentage = folder.size() / 100;
+        System.out.print("[");
+        for (int i = 0; i < folder.size(); i++) {
+            checkSum.put(folder.get(i), getHash(folder.get(i)));
+            if (i % percentage == 0) {
+                System.out.print("#");
+            }
+        }
+        System.out.println("]");
         ArrayList<File> toRemove = new ArrayList<File>();
         try {
+            System.out.println("Checking for duplicates...");
             System.out.print("[");
-            double percentage = folder.size() / 100;
             for (int i = 0; i < folder.size(); i++) {
                 if (!toRemove.contains(folder.get(i))) {
                     String suffix = getFileSuffix(folder.get(i).getPath());
@@ -218,7 +231,8 @@ public class ThreadRipper {
                         } else {
                             for (int j = i + 1; j < folder.size(); j++) {
                                 if (folder.get(i).isFile() && folder.get(j).isFile()
-                                        && FileUtils.contentEquals(folder.get(i), folder.get(j))){
+                                        && FileUtils.sizeOf(folder.get(i)) == FileUtils.sizeOf(folder.get(j))
+                                        && checkSum.get(folder.get(i)).equals(checkSum.get(folder.get(j)))){
                                     toRemove.add(folder.get(j));
                                 }
                             }
@@ -246,17 +260,41 @@ public class ThreadRipper {
             System.out.println(trace);
         }
     }
-    private void resolveDuplicates(ArrayList<File> toRemove) {
+    private String getHash(File file) {
         try {
-            System.out.print("[");
-            for (File element: toRemove) {
-                Files.delete(element.toPath());
-                System.out.print("#");
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            FileInputStream in = new FileInputStream(file);
+            byte[] buffer = new byte[8192];
+            DigestInputStream dis = new DigestInputStream(in, md);
+            try {
+                while (dis.read(buffer) != -1);
+            } finally {
+                dis.close();
             }
-            System.out.println("]");
+            return bytesToHex(md.digest());
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return "";
+    }
+    public static String bytesToHex(byte[] in) {
+        final StringBuilder builder = new StringBuilder();
+        for(byte b : in) {
+            builder.append(String.format("%02x", b));
+        }
+        return builder.toString();
+    }
+    private void resolveDuplicates(ArrayList<File> toRemove) {
+        System.out.print("[");
+        for (File element: toRemove) {
+            try {
+                Files.delete(element.toPath());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            System.out.print("#");
+        }
+        System.out.println("]");
     }
     private File initDuplicates() {
         try {
