@@ -218,7 +218,7 @@ public class ThreadRipper {
             System.out.println("Checking for duplicates...");
             System.out.print("[");
             for (int i = 0; i < folder.size(); i++) {
-                if (!toRemove.contains(folder.get(i))) {
+                if (!toRemove.contains(folder.get(i)) && folder.get(i) != null && folder.get(i).isFile()) {
                     String suffix = getFileSuffix(folder.get(i).getPath());
                     if (suffix.equals("jpeg") || suffix.equals("png")
                             || suffix.equals("jpg") || suffix.equals("apng")
@@ -226,7 +226,7 @@ public class ThreadRipper {
                             || suffix.equals("tif") || suffix.equals("xcf")
                             || suffix.equals("pdf")) {
                         Dimension fileDim = getImageDim(folder.get(i).getPath(), suffix);
-                        if (fileDim.getHeight() < 720 || fileDim.getWidth() < 1080) {
+                        if (fileDim != null && (fileDim.getHeight() < 720 || fileDim.getWidth() < 1080)) {
                             toRemove.add(folder.get(i));
                         } else {
                             for (int j = i + 1; j < folder.size(); j++) {
