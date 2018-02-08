@@ -167,10 +167,25 @@ def create_threads(filenames):
         dic[threadname].append(filename)
     return dic
 
+def removeLoliThreads(threads):
+    toDelete = []
+    for name in list(threads.keys()):
+        if ("loli" in name):
+            for filename in threads[name]:
+                try:
+                    os.remove(filename)
+                except:
+                    pass
+            toDelete.append(name)
+    for thread in toDelete:
+        del threads[thread]
+
+
 def __main__():
     begining = time()
     reddit = praw.Reddit('slashwBot', user_agent=USER_AGENT)
     threads = get_valid_threads()
+    removeLoliThreads(threads)
 
     while True:
         notTooLong = True
