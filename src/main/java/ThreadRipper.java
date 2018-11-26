@@ -51,7 +51,11 @@ public class ThreadRipper {
             }
             for (int i = 0; i < links.size(); i++) {
                 links.set(i, parseLink(links.get(i)));
-                names.add(parseThreadName(userAgent.doc.getUrl()) + "_" + parseFileName(links.get(i)));
+                String threadName = parseThreadName(userAgent.doc.getUrl(), 36);
+                if (threadName.equals("")) {
+                    threadName = parseThreadName(userAgent.doc.getUrl(), 33);
+                }
+                names.add(threadName + "_" + parseFileName(links.get(i)));
             }
             String[] folder = new File(filePath).list();
             HashMap<Integer, String> files = new HashMap<Integer, String>();
@@ -104,6 +108,7 @@ public class ThreadRipper {
                         System.out.print("#");
                     } catch (Exception e) {
                         System.out.println("\nFile: " + (i + 1) + " at the url: " + links.get(i) + " failed to download");
+                        System.out.println(names.get(i));
                         success += downloadImages(links.subList(i + 1, links.size()), names.subList(i + 1, names.size()), userAgent, files, duplicateStream);
                         i = links.size();
                     }
@@ -325,8 +330,8 @@ public class ThreadRipper {
         return new File(new File(filePath).getParentFile().getPath() + "/duplicates.txt");
     }
 
-    private String parseThreadName(String threadName) {
-        String name = threadName.substring(33);
+    private String parseThreadName(String threadName, int lenURL) {
+        String name = threadName.substring(lenURL);
         String toReturn = "";
         boolean isName = false;
         for (int i = 0; i < name.length(); i++) {
