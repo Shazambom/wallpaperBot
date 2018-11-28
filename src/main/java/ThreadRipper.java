@@ -13,9 +13,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -145,7 +143,13 @@ public class ThreadRipper {
 
 
     public ArrayList<String> getThreads(String url) {
-        ArrayList<String> threadUrls = new ArrayList<String>();
+        ArrayList<String> threads = crawlBoard(url);
+        removeBadUrls(threads);
+        return threads;
+    }
+
+    private ArrayList<String> crawlBoard(String url) {
+        HashSet<String> threadUrls = new HashSet<String>();
         try {
             UserAgent userAgent = new UserAgent();
             userAgent.visit(url);
@@ -153,39 +157,27 @@ public class ThreadRipper {
             for (Element element: clickHere) {
                 threadUrls.add(parseLink(element.toString()));
             }
-            removeCopyCats(threadUrls);
             try {
                 userAgent.doc.submit("Next");
             } catch (Exception e) {
-                return threadUrls;
+                return new ArrayList<String>(threadUrls);
             }
-            threadUrls.addAll(getThreads(userAgent.doc.getUrl()));
+            threadUrls.addAll(crawlBoard(userAgent.doc.getUrl()));
 
         } catch(Exception e) {
             e.printStackTrace();
         }
-        return threadUrls;
+        return new ArrayList<String>(threadUrls);
     }
 
-    private void removeCopyCats(ArrayList<String> threadUrls) {
-        ArrayList<String> copyCatUrls = new ArrayList<String>();
+    private void removeBadUrls(ArrayList<String> threadUrls) {
+        ArrayList<String> badUrls = new ArrayList<String>();
         for (String element: threadUrls) {
-            if (element.matches("http://boards\\.4chan\\.org/w/thread/[0-9]+/.+")) {
-                String copyCatUrl = "";
-                int slashCount = 0;
-                for (int i = 0; i < element.length(); i++) {
-                    if (element.charAt(i) == '/') {
-                        slashCount++;
-                    }
-                    if (slashCount == 6) {
-                        break;
-                    }
-                    copyCatUrl += element.charAt(i);
-                }
-                copyCatUrls.add(copyCatUrl);
+            if (!element.matches("http://boards\\.4channel\\.org/w/thread/[0-9]+.*")) {
+                badUrls.add(element);
             }
         }
-        for (String element: copyCatUrls) {
+        for (String element: badUrls) {
             threadUrls.remove(element);
         }
     }
