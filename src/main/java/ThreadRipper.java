@@ -51,10 +51,7 @@ public class ThreadRipper {
             }
             for (int i = 0; i < links.size(); i++) {
                 links.set(i, parseLink(links.get(i)));
-                String threadName = parseThreadName(userAgent.doc.getUrl(), 36);
-                if (threadName.equals("")) {
-                    threadName = parseThreadName(userAgent.doc.getUrl(), 33);
-                }
+                String threadName = parseThreadName(userAgent.doc.getUrl());
                 names.add(threadName + "_" + parseFileName(links.get(i)));
             }
             String[] folder = new File(filePath).list();
@@ -330,19 +327,9 @@ public class ThreadRipper {
         return new File(new File(filePath).getParentFile().getPath() + "/duplicates.txt");
     }
 
-    private String parseThreadName(String threadName, int lenURL) {
-        String name = threadName.substring(lenURL);
-        String toReturn = "";
-        boolean isName = false;
-        for (int i = 0; i < name.length(); i++) {
-            if (isName) {
-                toReturn += name.charAt(i);
-            }
-            if (name.charAt(i) == '/') {
-                isName = true;
-            }
-        }
-        return toReturn;
+    private String parseThreadName(String threadName) {
+        String names[] = threadName.split("/");
+        return names[names.length - 1];
     }
 
     private Dimension getImageDim(final String path, String suffix) {

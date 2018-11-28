@@ -138,7 +138,7 @@ def get_thread_name(filename):
     takes string filename and returns string thread name
     thread name is everything before the last '_' and after the last '/'
     """
-    return filename.split('_', 1)[0].rsplit('/', 1)[-1]
+    return filename.rsplit('_', 1)[0].rsplit('/', 1)[-1]
 def get_folders():
     return [PATH_BASE+x for x in os.listdir(PATH_BASE) if os.path.isdir(PATH_BASE+x)]
 
