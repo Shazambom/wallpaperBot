@@ -173,7 +173,7 @@ public class ThreadRipper {
     private void removeBadUrls(ArrayList<String> threadUrls) {
         ArrayList<String> badUrls = new ArrayList<String>();
         for (String element: threadUrls) {
-            if (!element.matches("http://boards\\.4channel\\.org/w/thread/[0-9]+.*")) {
+            if (!element.matches("http://boards\\.4channel\\.org/w/thread/[0-9]+.*") && !element.matches("http://boards\\.4chan\\.org/w/thread/[0-9]+.*")) {
                 badUrls.add(element);
             }
         }
