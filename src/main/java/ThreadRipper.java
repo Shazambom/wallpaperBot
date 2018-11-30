@@ -30,10 +30,6 @@ public class ThreadRipper {
         total = 0;
     }
 
-    public void setFilePath(String filePath){
-        this.filePath = filePath;
-    }
-
 
     public void RipThread(String url) {
         try {
@@ -47,9 +43,13 @@ public class ThreadRipper {
             for (Element element: fileNames) {
                 links.add(element.toString());
             }
+            System.out.println(userAgent.doc.findFirst("<span class=\"subject\">").getTextContent());
+            String threadName = userAgent.doc.findFirst("<span class=\"subject\">").getTextContent();
+            if (threadName.equals("")) {
+                threadName = parseThreadName(userAgent.doc.getUrl());
+            }
             for (int i = 0; i < links.size(); i++) {
                 links.set(i, parseLink(links.get(i)));
-                String threadName = parseThreadName(userAgent.doc.getUrl());
                 names.add(threadName + "_" + parseFileName(links.get(i)));
             }
             String[] folder = new File(filePath).list();
@@ -271,7 +271,7 @@ public class ThreadRipper {
         }
         return "";
     }
-    public static String bytesToHex(byte[] in) {
+    private static String bytesToHex(byte[] in) {
         final StringBuilder builder = new StringBuilder();
         for(byte b : in) {
             builder.append(String.format("%02x", b));
