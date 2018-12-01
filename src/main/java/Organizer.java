@@ -21,6 +21,7 @@ public class Organizer {
     }
 
     public void runRip() {
+        ripper.cleanUp();
         System.out.println("Finding threads...");
         ArrayList<String> threadUrls = ripper.getThreads(url);
         System.out.println(threadUrls.size() + " threads found");

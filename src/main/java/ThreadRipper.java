@@ -17,6 +17,7 @@ import java.util.*;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 public class ThreadRipper {
     private int total;
@@ -43,11 +44,11 @@ public class ThreadRipper {
             for (Element element: fileNames) {
                 links.add(element.toString());
             }
-            System.out.println(userAgent.doc.findFirst("<span class=\"subject\">").getTextContent());
-            String threadName = userAgent.doc.findFirst("<span class=\"subject\">").getTextContent();
+            String threadName = StringEscapeUtils.unescapeHtml4(userAgent.doc.findFirst("<span class=\"subject\">").getChildText().replace(' ', '-'));
             if (threadName.equals("")) {
                 threadName = parseThreadName(userAgent.doc.getUrl());
             }
+            System.out.println(threadName);
             for (int i = 0; i < links.size(); i++) {
                 links.set(i, parseLink(links.get(i)));
                 names.add(threadName + "_" + parseFileName(links.get(i)));
@@ -146,6 +147,24 @@ public class ThreadRipper {
         ArrayList<String> threads = crawlBoard(url);
         removeBadUrls(threads);
         return threads;
+    }
+
+    private void listThreadNames(ArrayList<String> threads) {
+        try {
+            UserAgent userAgent = new UserAgent();
+            for (String url: threads) {
+                userAgent.visit(url);
+                Element element = userAgent.doc.findFirst("<span class=\"subject\">");
+                String threadName = StringEscapeUtils.unescapeHtml4(element.getChildText().split("-")[0].replace(' ', '-'));
+                if (threadName.equals("")) {
+                    threadName = parseThreadName(url);
+                }
+                System.out.println(threadName);
+                Thread.sleep(1000);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private ArrayList<String> crawlBoard(String url) {
